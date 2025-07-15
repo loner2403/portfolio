@@ -181,7 +181,7 @@ export const PROJECTS: ProjectType[] = [
         {
             title: 'Blogging Platform',
             slug: 'medium-blog-clone',
-            liveUrl: 'https://blog-ten-pi-91.vercel.app/',
+            liveUrl: 'https://blogs.harshallade.xyz/',
             year: 2025,
             description: `
             A full-stack blogging platform inspired by Medium, providing a clean writing and reading experience.  
