@@ -84,7 +84,7 @@ const ProjectDetails = () => {
     return (
         <section className="pt-5 pb-14 text-white bg-background min-h-screen">
             <div className="container" ref={containerRef}>
-                <div className="flex justify-between items-center mb-6 ml-4 md:mb-16">
+                <div className="flex justify-between items-center mb-6 md:mb-16 px-6 md:pl-12 md:pr-0">
                     <TransitionLink
                         back={true}
                         className="inline-flex items-center group"
@@ -101,7 +101,7 @@ const ProjectDetails = () => {
                     id="info"
                 >
                     <div className="relative w-full">
-                        <div className="flex flex-col md:flex-row items-start gap-4 md:gap-6 mx-auto mb-6 md:mb-10 max-w-[635px] px-4 md:px-0">
+                        <div className="flex flex-col md:flex-row items-start gap-4 md:gap-6 mx-auto mb-6 md:mb-10 max-w-4xl px-6 md:pl-12 md:pr-0">
                             <h1 className="fade-in-later opacity-0 text-4xl md:text-[60px] leading-tight md:leading-none anton-font overflow-hidden">
                                 <span className="inline-block">
                                     {project.title}
@@ -132,7 +132,7 @@ const ProjectDetails = () => {
                             </div>
                         </div>
 
-                        <div className="max-w-[635px] space-y-6 md:space-y-7 pb-6 md:pb-20 mx-auto px-4 md:px-0">
+                        <div className="max-w-4xl space-y-6 md:space-y-7 pb-6 md:pb-20 mx-auto px-6 md:pl-12 md:pr-0">
                             <div className="fade-in-later">
                                 <p className="text-muted-foreground anton-font mb-2 md:mb-3 text-lg">
                                     Year
@@ -172,23 +172,20 @@ const ProjectDetails = () => {
                 </div>
 
                 <div
-                    className="fade-in-later relative px-4 md:px-8 lg:px-0 mt-10 md:mt-20"
+                    className="fade-in-later relative left-1/2 -translate-x-1/2 w-screen ml-2 px-6 md:pl-12 md:pr-0 mt-10 md:mt-20"
                     id="images"
                 >
-                    <div className="flex flex-col gap-6 md:gap-12 max-w-screen-lg mx-auto">
+                    <div className="flex flex-col gap-8 md:gap-14 max-w-screen-2xl mx-auto">
                         {project.images.map((image, idx) => (
                             <div
                                 key={idx}
-                                className="group relative w-full overflow-hidden rounded-xl md:rounded-2xl shadow-lg transition-all duration-500 hover:shadow-xl"
-                                style={{
-                                    aspectRatio: window.innerWidth < 768 ? '4/3' : '16/9',
-                                    backgroundImage: `url(${image})`,
-                                    backgroundSize: 'cover',
-                                    backgroundPosition: 'center 50%',
-                                    backgroundRepeat: 'no-repeat',
-                                }}
+                                className="group relative w-full overflow-hidden rounded-xl md:rounded-2xl bg-transparent shadow-lg transition-all duration-500 hover:shadow-xl"
                             >
-                                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-all duration-300"></div>
+                                <img
+                                    src={image}
+                                    alt={`Project image ${idx + 1}`}
+                                    className="w-full h-auto max-h-[80vh] object-contain"
+                                />
                                 <a
                                     href={image}
                                     target="_blank"

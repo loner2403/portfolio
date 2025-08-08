@@ -234,31 +234,55 @@ export const PROJECTS: ProjectType[] = [
             ],
             },
     {
-        title: 'Resume Roaster',
-        slug: 'resume-roaster',
+        title: 'ThumbnailAI',
+        slug: 'thumbnail-ai',
+        liveUrl: 'https://thumbnailai.harshallade.xyz/',
+        year: 2025,
+        description: `
+        AI-powered thumbnail generation and editing tool for creators.
+        
+        <p><strong>Status:</strong> Work in progress</p>
+        
+        Key Features:<br/>
+        <ul>
+          <li>🎯 AI styles/presets to generate thumbnails quickly</li>
+          <li>🧰 Interactive editor with color picker, sliders and layers</li>
+          <li>🪄 Background removal and effects</li>
+          <li>🔐 Auth, theming and project saving</li>
+          <li>💳 Payments via Razorpay (optional)</li>
+        </ul><br/>
+        
+        Technical Highlights:
+        <ul>
+          <li>Next.js 15 (App Router), React 19, TypeScript</li>
+          <li>Tailwind CSS for styling</li>
+          <li>Framer Motion and GSAP for smooth interactions</li>
+          <li>Prisma ORM</li>
+          <li>Clerk/NextAuth for authentication</li>
+        </ul>
+        `,
+        role: `
+        Full-Stack Developer
+        `,
         techStack: [
-            'GPT-4',
             'Next.js',
-            'Postgressql',
-            'Prisma',
+            'React',
+            'TypeScript',
             'Tailwind CSS',
+            'Prisma',
+            'NextAuth',
+            'Clerk',
+            'GSAP',
+            'Framer Motion'
         ],
-        thumbnail: '/long/cold-email-gen.png',
-        longThumbnail: '/long/cold-email-gen.png',
+        sourceCode: 'https://github.com/loner2403/thumbnailAI',
+        thumbnail: '/long/thumbnail.png',
+        longThumbnail: '/long/thumbnail.png',
         images: [
-            '/long/cold-email-gen.png',
-            '/long/cold-email-gen.png',
-            '/long/cold-email-gen.png',
-            '/long/cold-email-gen.png',
+            '/Images/thumb1.png',
+            '/Images/thumb2.png',
+            '/Images/thumb3.png',
         ],
-        liveUrl: '',
-        year: 2023,
-        description:
-            'Resume Roaster is a web application designed to provide tailored resume feedback and professional writing services. Built with Next.js, PostgreSQL, Prisma, and Tailwind CSS, it integrates GPT-4 for AI-powered recommendations. The platform also includes peer-to-peer reviews with a points-based system, fostering a collaborative and engaging experience. Targeting freshers, experienced professionals, and programmers, it helps optimize resumes for job-specific success.',
-        role: `As the sole developer and business owner, I:<br/>
-        - Designed and developed the platform end-to-end using Next.js, PostgreSQL, Prisma, and Tailwind CSS.<br/>
-        - Integrated GPT-4 for AI-driven feedback and insights.<br/>
-        - Implemented complex SQL queries, including one to identify the top two resumes based on user points.`,
     },
    
 ];

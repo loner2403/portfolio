@@ -44,8 +44,15 @@ const ProjectList = () => {
                     });
                 }
 
+                // Clamp preview within the container so the top/bottom never get cut off
+                let targetY = offsetTop - imageRect.height / 2;
+                const minY = 0;
+                const maxY = Math.max(0, containerRect.height - imageRect.height);
+                if (targetY < minY) targetY = minY;
+                if (targetY > maxY) targetY = maxY;
+
                 gsap.to(imageContainer.current, {
-                    y: offsetTop - imageRect.height / 2,
+                    y: targetY,
                     duration: 1,
                     opacity: 1,
                 });
@@ -106,7 +113,7 @@ const ProjectList = () => {
                                     width={400}
                                     height={500}
                                     className={cn(
-                                        'absolute inset-0 transition-all duration-500 w-full h-full object-cover',
+                                        'absolute inset-0 transition-all duration-500 w-full h-full object-contain object-top',
                                         {
                                             'opacity-0': project.slug !== selectedProject,
                                         },
