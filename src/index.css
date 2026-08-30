@@ -1,6 +1,20 @@
+@import "tailwindcss";
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+@theme {
+  --color-background: #252a34;
+  --color-background-light: #323945;
+  --color-foreground: #e7e9ee;
+  --color-muted-foreground: #9aa0ac;
+  --color-primary: #22d3ee;
+  --color-primary-foreground: #0b0d13;
+  --color-blue: #007bff;
+  --font-anton: "Anton", sans-serif;
+  --spacing-section: 8rem;
+}
+
+.anton-font {
+  font-family: "Anton", sans-serif;
+}
 
 html, body {
   background-color: #252a34;

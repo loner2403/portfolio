@@ -1,14 +1,15 @@
-import './App.css';
+///?import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import AboutMe from './components/AboutMe';
 import Banner from './components/Banner';
 import Navbar from './components/Navbar';
 import ScrollProgressIndicator from './components/ScrollProgressIndicator';
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import Skills from './components/Skills';
 import ProjectList from './components/ProjectList';
-import ProjectDetails from './components/ProjectDetails';
 import Footer from './components/Footer';
+
+const ProjectDetails = lazy(() => import('./components/ProjectDetails'));
 import { Analytics } from '@vercel/analytics/react';
 
 function App() {
@@ -30,7 +31,9 @@ function App() {
         } />
         <Route path="/projects/:slug" element={
           <>
-            <ProjectDetails />
+            <Suspense fallback={<div className="min-h-screen bg-background" />}>
+              <ProjectDetails />
+            </Suspense>
             <Footer />
           </>
         } />

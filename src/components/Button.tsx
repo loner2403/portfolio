@@ -307,7 +307,7 @@ const Button: React.FC<ButtonProps> = ({
         href={href}
         target={target}
         rel={rel}
-        className={`group ${buttonClasses}`}
+        className={`group cursor-button ${buttonClasses}`}
         {...mouseEvents}
         onClick={handleClick as any}
         style={{ WebkitTapHighlightColor: 'transparent' }}
@@ -323,7 +323,7 @@ const Button: React.FC<ButtonProps> = ({
       ref={buttonRef as React.RefObject<HTMLButtonElement>}
       type="button"
       disabled={disabled}
-      className={`group ${buttonClasses}`}
+      className={`group cursor-button ${buttonClasses}`}
       onClick={handleClick}
       {...mouseEvents}
       style={{ WebkitTapHighlightColor: 'transparent' }}

@@ -82,13 +82,15 @@ const Skills = () => {
                                     <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-x-4 md:gap-x-6 gap-y-8 md:gap-y-10">
                                         {value.map((item) => (
                                             <div
-                                                className="slide-up flex flex-col xs:flex-row items-center gap-3 group"
+                                                className="slide-up flex flex-col xs:flex-row items-center gap-3 group cursor-image"
                                                 key={item.name}
                                             >
                                                 <div className="w-18 h-18 xs:w-20 xs:h-20 md:w-24 md:h-24 flex items-center justify-center bg-background-light/20 p-4 rounded-lg group-hover:bg-background-light/40 group-hover:scale-110 transition-all duration-300">
                                                     <img
                                                         src={item.icon}
                                                         alt={item.name}
+                                                        loading="lazy"
+                                                        decoding="async"
                                                         className="w-full h-full object-contain"
                                                     />
                                                 </div>

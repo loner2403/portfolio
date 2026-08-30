@@ -6,12 +6,14 @@ import './index.css'
 import App from './App.tsx'
 import ParticleBackground from './components/ParticleBackground';
 import Preloader from './components/Preloader.tsx'
+import MagneticCursor from './components/MagneticCursor.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
     <Preloader />
       <ParticleBackground />
+      <MagneticCursor />
       <App />
     </BrowserRouter>
   </StrictMode>,

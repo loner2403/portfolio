@@ -135,7 +135,7 @@ const Project = ({ index, project, onMouseEnter, isSelected }: Props) => {
   return (
     <TransitionLink
       to={`/projects/${project.slug}`}
-      className={`group relative block py-6 md:py-8 border-b border-white/10 hover:border-transparent ${
+      className={`group relative block py-6 md:py-8 border-b border-white/10 hover:border-transparent cursor-project ${
         isSelected ? 'opacity-50' : ''
       }`}
       onMouseEnter={handleMouseEnter}

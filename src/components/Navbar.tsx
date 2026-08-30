@@ -205,7 +205,7 @@ const Navbar: React.FC<NavbarProps> = ({ setIsMenuOpen }) => {
                                                         href={link.url}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="text-white text-base sm:text-lg flex items-center hover:text-primary transition-colors duration-300"
+                                                        className="text-white text-base sm:text-lg flex items-center hover:text-primary transition-colors duration-300 cursor-link"
                                                     >
                                                         <div className="flex items-center w-full">
                                                             <span className="mr-2">
@@ -350,7 +350,7 @@ const Navbar: React.FC<NavbarProps> = ({ setIsMenuOpen }) => {
                                 <p className="text-gray-400 mb-3 sm:mb-4 tracking-widest text-xs sm:text-sm text-center">GET IN TOUCH</p>
                                 <a
                                     href={`mailto:${GENERAL_INFO.email}`}
-                                    className="text-white group flex justify-center text-sm sm:text-lg hover:text-primary transition-colors duration-300 w-full break-all"
+                                    className="text-white group flex justify-center text-sm sm:text-lg hover:text-primary transition-colors duration-300 w-full break-all cursor-link"
                                 >
                                     <span className="relative overflow-hidden inline-block text-center">
                                         {GENERAL_INFO.email}
