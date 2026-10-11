@@ -11,6 +11,72 @@
       ],
       "destination": "https://harshallade.site/$1",
       "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "portfolio-2-omega-lovat.vercel.app"
+        }
+      ],
+      "destination": "https://harshallade.site/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "portfolio-2-loner2403s-projects.vercel.app"
+        }
+      ],
+      "destination": "https://harshallade.site/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "portfolio-2-git-main-loner2403s-projects.vercel.app"
+        }
+      ],
+      "destination": "https://harshallade.site/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "portfolio-2-loner2403-loner2403s-projects.vercel.app"
+        }
+      ],
+      "destination": "https://harshallade.site/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "harshallade.xyz"
+        }
+      ],
+      "destination": "https://harshallade.site/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.harshallade.xyz"
+        }
+      ],
+      "destination": "https://harshallade.site/$1",
+      "permanent": true
     }
   ],
   "rewrites": [
