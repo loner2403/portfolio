@@ -15,6 +15,17 @@ Audience: founders / hiring managers at AI startups. They decide in ~40 seconds.
 - Respect `prefers-reduced-motion` everywhere (`<MotionConfig reducedMotion="user">` + CSS + canvas gates).
 - Mobile first: no horizontal scroll at 375px; 16px side gutter.
 
+## V3.1 addendum — "Dataflow" (owner-approved 2026-10-09, supersedes conflicting text below)
+
+Full design: `docs/design-room/DESIGN-FINAL.md`. Owner chose the **flowing** variant: Bézier edges plus constant edge flow.
+- Hero = SVG architecture topology of the Bull AI systems (replaces DotGrid and TracePanel). Page-wide **bus rail** in the left gutter connects section markers.
+- Retired: DotGrid, TracePanel card, AnimatedBeam, SpotlightCard, TracingBeam. Teal token is not used.
+- Lime = data in transit only (packets, active node, live dots, focus ring, CTA).
+- Motion allowlist: `transform`, `opacity`, `pathLength`, `stroke-dashoffset`, `offset-path`. Max 3 movers per viewport. Every loop is IntersectionObserver-gated and stops on `document.hidden`. Scroll drives only the Log dot.
+- Beam ban now means decorative beams/backgrounds only. Flowing lines that carry labels are content.
+- Shape: squares / 2px radii, no pill buttons, badges or chips.
+- Mobile keeps a simplified diagram (5-node vertical spine). No horizontal scroll at 375px.
+
 ## 1. Tokens (Tailwind v4 `@theme` in `src/index.css`)
 
 | Token | Value | Use |
