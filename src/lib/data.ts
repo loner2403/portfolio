@@ -211,11 +211,12 @@ export const PROJECTS: ProjectType[] = [
         thumbnail: '',
         longThumbnail: '',
         images: [],
+        sourceCode: 'https://github.com/loner2403/thumbnailAI',
     },
     {
         title: 'Blog Platform',
         slug: 'medium-blog-clone',
-        liveUrl: 'https://blogs.harshallade.xyz/',
+        liveUrl: 'https://blog-ten-pi-91.vercel.app/',
         year: 2024,
         description: `A full-stack blogging platform with auth, comments, dark/light mode, and 95+ PageSpeed. Built on Hono + Cloudflare Workers with React, Prisma, and PostgreSQL.`,
         role: `Full-stack developer: owned the entire lifecycle: Hono API on Cloudflare Workers, Prisma/PostgreSQL data layer, React frontend, and performance work to hit 95+ PageSpeed.`,
