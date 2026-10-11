@@ -1,0 +1,15 @@
+# Harshal Lade
+
+> Software engineer (AI and data platforms) based in Mumbai, India. Builds LLM agent workflows, retrieval-augmented generation systems and data pipelines. This site shows generalised reference architectures, not any employer's internal designs.
+
+## Pages
+
+- [Home](https://harshallade.site/): profile, reference architectures, work, experience log, tools and contact.
+- [Thumbnail AI](https://harshallade.site/projects/thumbnail-ai): project page.
+- [Blog Platform](https://harshallade.site/projects/medium-blog-clone): project page.
+- [Resume Roaster](https://harshallade.site/projects/resume-roaster): project page.
+
+## Elsewhere
+
+- [GitHub](https://github.com/loner2403)
+- [LinkedIn](https://www.linkedin.com/in/harshal-lade)

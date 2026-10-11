@@ -1,20 +1,35 @@
-
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
+import { LazyMotion, MotionConfig, domAnimation } from 'motion/react'
+import '@fontsource-variable/space-grotesk'
+import '@fontsource-variable/jetbrains-mono'
 import './index.css'
 import App from './App.tsx'
-import ParticleBackground from './components/ParticleBackground';
-import Preloader from './components/Preloader.tsx'
-import MagneticCursor from './components/MagneticCursor.tsx'
+import { applyMotionPref, readMotionPref } from '@/lib/motion-pref'
 
-createRoot(document.getElementById('root')!).render(
+const root = document.getElementById('root')!
+
+let storage: Storage | undefined
+try {
+  storage = window.localStorage
+} catch {
+  storage = undefined
+}
+
+applyMotionPref(readMotionPref(storage), document.documentElement)
+
+const element = (
   <StrictMode>
     <BrowserRouter>
-    <Preloader />
-      <ParticleBackground />
-      <MagneticCursor />
-      <App />
+      <MotionConfig reducedMotion="user">
+        <LazyMotion features={domAnimation}>
+          <App />
+        </LazyMotion>
+      </MotionConfig>
     </BrowserRouter>
-  </StrictMode>,
+  </StrictMode>
 )
+
+if (root.hasChildNodes()) hydrateRoot(root, element)
+else createRoot(root).render(element)
