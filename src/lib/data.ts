@@ -165,7 +165,7 @@ export const SYSTEMS: SystemType[] = [
 
 export const SOCIAL_LINKS = [
     { name: 'github', url: 'https://github.com/loner2403' },
-    { name: 'linkedin', url: 'https://www.linkedin.com/in/harshal-lade' },
+    { name: 'linkedin', url: 'https://www.linkedin.com/in/harshal-lade-a2a41b232/' },
 ];
 
 export const EDUCATION = {
