@@ -36,7 +36,7 @@ export default function Hero() {
                 {GENERAL_INFO.firstName}
               </span>
             </span>
-            <span className="line-mask pl-[10vw] text-card-1">
+            <span className="line-mask pl-[10vw] text-flame">
               <span className="line-up" style={{ animationDelay: '90ms' }}>
                 {GENERAL_INFO.lastName}
               </span>

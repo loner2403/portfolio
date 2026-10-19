@@ -65,6 +65,10 @@ export default function SiteHeader() {
   }, [pathname])
 
   useEffect(() => {
+    document.documentElement.dataset.menu = menuOpen ? 'open' : 'closed'
+  }, [menuOpen])
+
+  useEffect(() => {
     if (!menuOpen) return
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setMenuOpen(false)

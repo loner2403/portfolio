@@ -22,24 +22,35 @@ function Heading({ n, children }: { n: string; children: ReactNode }) {
   )
 }
 
+const FLAME = 'var(--color-flame)'
+const pad = (n: number) => String(n).padStart(2, '0')
+
 export default function CaseBody({
   study,
   accent,
   architecture,
+  story,
   note,
 }: {
   study: CaseStudy
   accent: string
   architecture?: ReactNode
+  story?: ReactNode
   note?: string
 }) {
+  const tldrColor = accent === 'var(--color-card-2)' ? FLAME : accent
+  let counter = 3
+  const storyNo = story ? pad(counter++) : ''
+  const archNo = architecture ? pad(counter++) : ''
+  const decisionsNo = pad(counter)
+
   return (
     <>
       <section data-testid="case-tldr" className="py-12 md:py-16">
         <p className="label">TL;DR</p>
         <p
           className="mt-4 max-w-[34em] border-l-4 pl-5 text-xl leading-[1.4] text-ink sm:text-2xl md:text-3xl md:leading-[1.35]"
-          style={{ borderColor: accent }}
+          style={{ borderColor: tldrColor }}
         >
           {study.tldr}
         </p>
@@ -57,7 +68,7 @@ export default function CaseBody({
             <div key={i} data-testid="case-result" className="flex flex-col bg-bg p-5 md:p-8">
               <span
                 className="font-display text-[clamp(2.25rem,5vw,4rem)] leading-none tabular-nums"
-                style={{ color: accent }}
+                style={{ color: FLAME }}
               >
                 {result.value}
               </span>
@@ -85,9 +96,9 @@ export default function CaseBody({
             >
               <span
                 className="font-display text-3xl leading-none tabular-nums"
-                style={{ color: accent }}
+                style={{ color: FLAME }}
               >
-                {String(i + 1).padStart(2, '0')}
+                {pad(i + 1)}
               </span>
               <span className="max-w-[36em] text-lg leading-[1.7] text-ink">{item}</span>
             </li>
@@ -95,22 +106,29 @@ export default function CaseBody({
         </ol>
       </section>
 
+      {story && (
+        <section data-testid="case-story" className={SECTION}>
+          <Heading n={storyNo}>How it works</Heading>
+          <div className={`${BODY} border border-line bg-[#F8F6F1] p-4`}>{story}</div>
+        </section>
+      )}
+
       {architecture && (
         <section data-testid="case-architecture" className={SECTION}>
-          <Heading n="03">Architecture</Heading>
+          <Heading n={archNo}>Architecture</Heading>
           <div className={`${BODY} overflow-x-auto border border-line bg-panel p-4`}>{architecture}</div>
         </section>
       )}
 
       <section className={SECTION}>
-        <Heading n={architecture ? '04' : '03'}>Decisions that mattered</Heading>
+        <Heading n={decisionsNo}>Decisions that mattered</Heading>
         <div className={`${BODY} grid gap-10`}>
           {study.decisions.map((d, i) => (
             <div
               key={i}
               data-testid="case-decision"
               className="border-t-2 pt-5"
-              style={{ borderColor: accent }}
+              style={{ borderColor: FLAME }}
             >
               <h3 className="text-xl font-medium text-ink">{d.title}</h3>
               <p className="mt-3 max-w-[36em] text-base leading-[1.7] text-muted">{d.body}</p>

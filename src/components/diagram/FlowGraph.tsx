@@ -189,7 +189,7 @@ export default function FlowGraph({
             refY="4"
             orient="auto"
           >
-            <path d="M0 0 L8 4 L0 8 Z" fill="#5A625C" />
+            <path d="M0 0 L8 4 L0 8 Z" fill="#66625A" />
           </marker>
         </defs>
 
@@ -206,8 +206,8 @@ export default function FlowGraph({
                 width={group.w}
                 height={group.h}
                 rx={4}
-                fill={lane ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.015)'}
-                stroke={lane ? '#2E2620' : '#3A3128'}
+                fill={lane ? 'rgba(17,17,17,0.03)' : 'rgba(17,17,17,0.02)'}
+                stroke={lane ? '#D6D1C6' : '#C9C3B6'}
                 strokeWidth={1}
                 strokeDasharray={lane ? undefined : '4 6'}
               />
@@ -463,7 +463,7 @@ export default function FlowGraph({
                       height={h}
                       rx={2}
                       fill="none"
-                      stroke={isActiveNode ? 'var(--color-signal)' : '#3C4A41'}
+                      stroke={isActiveNode ? 'var(--color-signal)' : '#9A958B'}
                       strokeWidth={1}
                       strokeDasharray="3 4"
                     />

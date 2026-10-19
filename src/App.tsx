@@ -4,6 +4,7 @@ import { AnimatePresence, m, useReducedMotion } from 'motion/react'
 import { Analytics } from '@vercel/analytics/react'
 import SiteHeader from '@/components/layout/SiteHeader'
 import SiteFooter from '@/components/layout/SiteFooter'
+import MobileDock from '@/components/layout/MobileDock'
 import MotionLayer from '@/motion/MotionLayer'
 import { refreshScenes, scrollToTop } from '@/motion/bus'
 import { cn } from '@/lib/utils'
@@ -223,6 +224,7 @@ function App() {
         </m.main>
       </AnimatePresence>
       <SiteFooter />
+      <MobileDock />
       <LazyPalette />
       <Suspense fallback={null}>
         <AskBot />

@@ -295,6 +295,15 @@ export default function AskBot() {
   }, [ready])
 
   useEffect(() => {
+    const onOpenProbe = () => {
+      setReady(true)
+      setOpen(true)
+    }
+    window.addEventListener('open-probe', onOpenProbe)
+    return () => window.removeEventListener('open-probe', onOpenProbe)
+  }, [])
+
+  useEffect(() => {
     if (!open) return
     inputRef.current?.focus()
     const onKey = (event: KeyboardEvent) => {
@@ -389,7 +398,7 @@ export default function AskBot() {
     mood !== 'idle' ? mood : open ? (engaged ? 'listening' : 'idle') : sleeping ? 'sleep' : 'idle'
 
   return (
-    <div className="fixed right-4 bottom-4 z-40 md:right-6 md:bottom-6">
+    <div className="probe-dock-offset fixed right-4 bottom-4 z-40 md:right-6 md:bottom-6">
       <div className="relative">
         {open && (
           <Panel

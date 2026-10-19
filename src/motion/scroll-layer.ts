@@ -261,7 +261,32 @@ function mountScenes(): () => void {
             },
           })
           tl.to(card, { scale: 0.9 + index * 0.02 }, 0)
-          if (dim) tl.to(dim, { opacity: 0.35 }, 0)
+          if (dim) tl.to(dim, { opacity: 0.55 }, 0)
+        })
+      },
+    )
+
+    mm.add(
+      '(prefers-reduced-motion: no-preference) and (max-width: 1023px)',
+      () => {
+        const cards = gsap.utils.toArray<HTMLElement>('.stack-card')
+        gsap.set(cards, { transformOrigin: '50% 0%' })
+        cards.forEach((card, index) => {
+          const next = cards[index + 1]
+          if (!next) return
+          const dim = card.querySelector<HTMLElement>('[data-stack-dim]')
+          const tl = gsap.timeline({
+            defaults: { ease: 'none' },
+            scrollTrigger: {
+              trigger: next,
+              start: 'top 85%',
+              end: 'top 25%',
+              scrub: 0.3,
+              invalidateOnRefresh: true,
+            },
+          })
+          tl.to(card, { scale: 0.95 + index * 0.01 }, 0)
+          if (dim) tl.to(dim, { opacity: 0.3 }, 0)
         })
       },
     )

@@ -5,6 +5,7 @@ import { SITE_DESCRIPTION, truncate, useDocumentMeta } from '@/lib/seo'
 import Container from '@/components/layout/Container'
 import CaseBody from '@/components/case/CaseBody'
 import SystemArchitecture from '@/components/home/SystemArchitecture'
+import StoryScene from '@/components/story/StoryScene'
 import NotFound from './NotFound'
 
 const NAV = 'inline-flex min-h-11 items-center font-mono text-sm text-ink underline-offset-4 hover:underline'
@@ -63,6 +64,7 @@ export default function SystemPage() {
         <CaseBody
           study={study}
           accent={accent}
+          story={<StoryScene storyId={system.id} />}
           architecture={<SystemArchitecture systemId={system.id} />}
           note="Proprietary work. The approach and architecture are described; client data and code are not shown."
         />

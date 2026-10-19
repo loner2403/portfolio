@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 import { GENERAL_INFO, HERO_STATS, MY_EXPERIENCE, PRINCIPLES, PROJECTS, RESUME_SKILL_GROUPS, SYSTEMS } from '../src/lib/data'
+import { STORIES } from '../src/lib/stories'
 
 const SECTION_IDS = ['top', 'systems', 'work', 'log', 'stack', 'contact']
 const VIEWPORTS = [
@@ -194,7 +195,7 @@ test.describe('home page', () => {
       const heading = el.querySelector('h2') as HTMLElement
       return { bg: style.backgroundColor, ink: getComputedStyle(heading).color }
     })
-    expect(colours.bg).toBe('rgb(255, 112, 54)')
+    expect(colours.bg).toBe('rgb(255, 122, 61)')
     expect(contrast(colours.bg, colours.ink)).toBeGreaterThanOrEqual(7)
   })
 
@@ -311,7 +312,7 @@ test.describe('work and project pages', () => {
       const header = page.getByTestId('project-header')
       await expect(header).toBeVisible()
       const bg = await header.evaluate((el) => getComputedStyle(el).backgroundColor)
-      expect(['rgb(255, 112, 54)', 'rgb(237, 232, 221)', 'rgb(168, 189, 255)']).toContain(bg)
+      expect(['rgb(255, 122, 61)', 'rgb(255, 255, 255)', 'rgb(201, 213, 255)']).toContain(bg)
       await expect(page.getByTestId('project-visual')).toHaveCount(1)
     }
   })
@@ -369,7 +370,7 @@ test.describe('V3.4 sections', () => {
       bg: getComputedStyle(el).backgroundColor,
       ink: getComputedStyle(el.querySelector('h1') as HTMLElement).color,
     }))
-    expect(colours.bg).toBe('rgb(168, 189, 255)')
+    expect(colours.bg).toBe('rgb(201, 213, 255)')
     expect(contrast(colours.bg, colours.ink)).toBeGreaterThanOrEqual(7)
     await expect(page.locator('main h1')).toHaveCount(1)
     await expect(block.locator('a[href="/"]')).toHaveCount(1)
@@ -651,6 +652,135 @@ test.describe('V3.7 prerendered head and mobile diagram', () => {
   })
 })
 
+test.describe('V3.8 paper, stories and mobile', () => {
+  test('the page is warm paper', async ({ page }) => {
+    await gotoReady(page)
+    expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(243, 241, 236)')
+  })
+
+  for (const viewport of [{ width: 1440, height: 900, layout: 'wide' }, { width: 375, height: 812, layout: 'tall' }]) {
+    test(`every system card shows its ${viewport.layout} story`, async ({ page }) => {
+      await page.setViewportSize({ width: viewport.width, height: viewport.height })
+      await gotoReady(page)
+      for (const system of SYSTEMS) {
+        const story = page.locator(`#system-${system.id} [data-story="${system.id}"][data-layout="${viewport.layout}"]`)
+        await expect(story).toHaveCount(1)
+        await expect(story).toBeVisible()
+      }
+    })
+  }
+
+  test('stories play when scrolled into view', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 })
+    await gotoReady(page)
+    const svg = page.locator('#system-S-02 [data-story="S-02"][data-layout="tall"]')
+    await svg.scrollIntoViewIfNeeded()
+    await expect(svg).toHaveAttribute('data-playing', 'true', { timeout: 8000 })
+  })
+
+  test('a story ends its loop with the whole drawing visible', async ({ page }) => {
+    test.setTimeout(120_000)
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await gotoReady(page)
+    for (const id of SYSTEMS.map((s) => s.id)) {
+      const svg = page.locator(`#system-${id} [data-story="${id}"][data-layout="wide"]`)
+      await page.evaluate((sid) => {
+        const el = document.getElementById(`system-${sid}`)!
+        window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 90, behavior: 'instant' as ScrollBehavior })
+      }, id)
+      await expect(svg).toHaveAttribute('data-playing', 'true', { timeout: 10_000 })
+      const lastEnd = Math.max(...STORIES[id].steps.map((st) => st.at + (st.dur ?? 0.6)))
+      await page.waitForTimeout(Math.round((0.25 + lastEnd + 0.6) * 1000))
+      const hiddenFinal = STORIES[id].wide.els.filter((el) => 'final' in el && el.final === false).map((el) => el.id)
+      const invisible = await svg.evaluate((root, skip) => {
+        const out: string[] = []
+        for (const g of Array.from(root.querySelectorAll('[data-sid]'))) {
+          const sid = g.getAttribute('data-sid') ?? ''
+          if (skip.includes(sid) || g.getAttribute('data-kind') === 'token') continue
+          const parts = [g, ...Array.from(g.querySelectorAll('[data-row], [data-bar], [data-fill]'))]
+          if (parts.some((n) => Number.parseFloat(getComputedStyle(n).opacity) < 0.5)) out.push(sid)
+        }
+        return out
+      }, hiddenFinal)
+      expect(invisible, id).toEqual([])
+    }
+  })
+
+  test('reduced motion shows the finished drawing and never plays', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await gotoReady(page)
+    const svg = page.locator('#system-S-03 [data-story="S-03"][data-layout="wide"]')
+    await svg.scrollIntoViewIfNeeded()
+    await page.waitForTimeout(1200)
+    await expect(svg).not.toHaveAttribute('data-playing', 'true')
+    const finalHidden = [...STORIES['S-03'].wide.els].filter((el) => 'final' in el && el.final === false).map((el) => el.id)
+    const hidden = await svg.evaluate((el, skip) =>
+      Array.from(el.querySelectorAll('*'))
+        .filter((n) => !n.matches('.st-flash, .st-token') && !skip.includes(n.closest('[data-sid]')?.getAttribute('data-sid') ?? ''))
+        .filter((n) => getComputedStyle(n).opacity === '0').length,
+    finalHidden)
+    expect(hidden).toBe(0)
+  })
+
+  test('system cards stack on phones', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 })
+    await gotoReady(page)
+    for (const system of SYSTEMS) {
+      const position = await page.locator(`#system-${system.id}`).evaluate((el) => getComputedStyle(el).position)
+      expect(position, system.id).toBe('sticky')
+    }
+  })
+
+  test('stacked phone cards fit on a small phone screen', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 667 })
+    await gotoReady(page)
+    for (const system of SYSTEMS) {
+      const h = await page.locator(`#system-${system.id}`).evaluate((el) => el.getBoundingClientRect().height)
+      expect(h, system.id).toBeLessThanOrEqual(667 - 72)
+    }
+  })
+
+  test('the hidden dock is inert and the visible dock is not', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 })
+    await gotoReady(page)
+    const dock = page.getByTestId('mobile-dock')
+    await expect(dock).toHaveAttribute('inert', '')
+    await page.waitForFunction(() => document.documentElement.classList.contains('motion-ready'), null, { timeout: 15_000 })
+    await page.evaluate(() => window.scrollTo({ top: document.getElementById('systems')!.offsetTop, behavior: 'instant' as ScrollBehavior }))
+    await expect(dock).toHaveAttribute('data-visible', 'true')
+    await expect(dock).not.toHaveAttribute('inert', '')
+  })
+
+  test('phone dock appears after the hero and its links work', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 })
+    await gotoReady(page)
+    const dock = page.getByTestId('mobile-dock')
+    await expect(dock).toHaveAttribute('data-visible', 'false')
+    await page.waitForFunction(() => document.documentElement.classList.contains('motion-ready'), null, { timeout: 15_000 })
+    await page.evaluate(() => window.scrollTo({ top: document.getElementById('systems')!.offsetTop, behavior: 'instant' as ScrollBehavior }))
+    await expect(dock).toHaveAttribute('data-visible', 'true')
+    const links = dock.locator('a, button')
+    await expect(links).toHaveCount(4)
+    for (let i = 0; i < 4; i++) expect((await links.nth(i).boundingBox())!.height).toBeGreaterThanOrEqual(44)
+    await dock.getByRole('link', { name: 'Work' }).click()
+    await expect(page).toHaveURL(/#work$/)
+  })
+
+  test('no phone dock on desktop', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await gotoReady(page)
+    await expect(page.getByTestId('mobile-dock')).toBeHidden()
+  })
+
+  test('case pages include a how-it-works story', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+    for (const system of SYSTEMS) {
+      await gotoReady(page, `/systems/${system.slug}`)
+      await expect(page.getByTestId('case-story').locator(`[data-story="${system.id}"][data-layout="wide"]`)).toBeVisible()
+    }
+  })
+})
+
 test.describe('touch devices', () => {
   test.use({ hasTouch: true, isMobile: true, viewport: { width: 390, height: 844 } })
 
@@ -696,11 +826,7 @@ test.describe('reduced motion', () => {
     expect(hidden).toEqual([])
     await page.getByTestId('work-row').first().click()
     await expect(page.getByTestId('project-detail')).toBeVisible()
-    const wipe = await page.evaluate(() =>
-      Array.from(document.querySelectorAll<HTMLElement>('div.fixed.inset-0')).filter(
-        (el) => getComputedStyle(el).backgroundColor === 'rgb(255, 112, 54)',
-      ).length,
-    )
+    const wipe = await page.evaluate(() => document.querySelectorAll('div.fixed.inset-0[aria-hidden="true"]').length)
     expect(wipe).toBe(0)
   })
 })

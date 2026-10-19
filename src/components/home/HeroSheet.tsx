@@ -83,7 +83,7 @@ export default function HeroSheet({
           className="grid-in pointer-events-none absolute inset-0"
           style={{
             backgroundImage:
-              'linear-gradient(to right, rgba(237,233,223,.035) 1px, transparent 1px), linear-gradient(to bottom, rgba(237,233,223,.035) 1px, transparent 1px)',
+              'linear-gradient(to right, rgba(17,17,17,.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(17,17,17,.06) 1px, transparent 1px)',
             backgroundSize: '32px 32px',
             maskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, #000 40%, transparent 100%)',
           }}

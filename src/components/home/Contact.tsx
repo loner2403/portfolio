@@ -73,7 +73,7 @@ export default function Contact() {
               data-testid="copy-email"
               data-magnetic
               onClick={copy}
-              className="inline-flex min-h-11 items-center border border-signal-ink px-5 font-mono text-sm text-signal-ink transition-colors hover:bg-signal-ink hover:text-card-1"
+              className="inline-flex min-h-11 items-center border border-ink px-5 font-mono text-sm text-ink transition-colors hover:bg-ink hover:text-bg"
             >
               {label}
             </button>

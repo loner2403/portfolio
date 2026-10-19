@@ -5,7 +5,7 @@ import { COLOPHON, GENERAL_INFO } from '@/lib/data'
 
 export default function SiteFooter() {
   return (
-    <footer className="border-t border-line">
+    <footer className="border-t border-line pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-0">
       <Container>
         <div className="flex flex-col gap-4 py-8 font-mono text-xs text-muted">
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">

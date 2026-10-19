@@ -14,7 +14,7 @@ export default function Principles() {
             data-testid="principle"
             className="grid grid-cols-[3.5rem_minmax(0,1fr)] gap-x-4 gap-y-2 border-b border-line py-6 lg:grid-cols-[4rem_minmax(0,16rem)_minmax(0,1fr)_auto] lg:items-baseline lg:gap-x-8"
           >
-            <span className="row-span-3 font-display text-4xl leading-none tabular-nums text-card-1 lg:row-span-1">
+            <span className="row-span-3 font-display text-4xl leading-none tabular-nums text-flame lg:row-span-1">
               {String(index + 1).padStart(2, '0')}
             </span>
             <span className="text-lg font-medium text-ink">{principle.title}</span>

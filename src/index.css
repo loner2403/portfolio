@@ -28,19 +28,20 @@
 }
 
 @theme static {
-  --color-bg: #0B0B0B;
-  --color-panel: #141414;
-  --color-panel-2: #1C1C1C;
-  --color-line: #262626;
-  --color-ink: #F2F0EB;
-  --color-muted: #A6A6A6;
-  --color-faint: #8C8C8C;
-  --color-signal: #FF7036;
-  --color-signal-ink: #0B0B0B;
-  --color-teal: #EDE8DD;
-  --color-card-1: #FF7036;
-  --color-card-2: #EDE8DD;
-  --color-card-3: #A8BDFF;
+  --color-bg: #F3F1EC;
+  --color-panel: #EAE7E0;
+  --color-panel-2: #E1DDD4;
+  --color-line: #D6D1C6;
+  --color-ink: #111111;
+  --color-muted: #55524C;
+  --color-faint: #66625A;
+  --color-signal: #B93D0E;
+  --color-signal-ink: #FFFFFF;
+  --color-flame: #E4501A;
+  --color-teal: #E1DDD4;
+  --color-card-1: #FF7A3D;
+  --color-card-2: #FFFFFF;
+  --color-card-3: #C9D5FF;
 
   --font-sans: "Space Grotesk Variable", "Space Grotesk Fallback", system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
@@ -52,7 +53,7 @@
     scroll-behavior: smooth;
     scroll-padding-top: 80px;
     -webkit-tap-highlight-color: transparent;
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   html.lenis {
@@ -200,7 +201,7 @@
 
 .edge-base {
   fill: none;
-  stroke: #3A3A3A;
+  stroke: #B8B2A6;
   stroke-width: 1.5;
 }
 
@@ -211,14 +212,14 @@
 
 .edge-dashed {
   fill: none;
-  stroke: #444444;
+  stroke: #A39E93;
   stroke-width: 1.25;
   stroke-dasharray: 4 5;
 }
 
 .flow-dash {
   fill: none;
-  stroke: rgba(255, 112, 54, 0.38);
+  stroke: rgba(228, 80, 26, 0.55);
   stroke-width: 1.75;
   stroke-linecap: round;
   stroke-dasharray: 2 11;
@@ -227,16 +228,16 @@
 
 .edge-flow-solid {
   fill: none;
-  stroke: rgba(255, 112, 54, 0.28);
+  stroke: rgba(228, 80, 26, 0.45);
   stroke-width: 1.5;
 }
 
 .group:hover .flow-dash {
-  stroke: rgba(255, 112, 54, 0.7);
+  stroke: rgba(228, 80, 26, 0.85);
 }
 
 .packet {
-  fill: var(--color-signal);
+  fill: var(--color-flame);
   animation: flow-in 400ms linear backwards, packet-run 2.6s linear infinite;
 }
 
@@ -303,7 +304,7 @@
 .edge-label {
   font-family: var(--font-mono);
   font-size: 11px;
-  fill: #8C8C8C;
+  fill: #66625A;
   paint-order: stroke;
   stroke: var(--color-bg);
   stroke-width: 4;
@@ -701,36 +702,36 @@ html[data-motion='paused'] :is(.packet-walk, .node-ring, .frame-bar, .probe-blin
 .stack-card {
   background: var(--card);
   border-color: transparent;
-  color: #0B0B0B;
-  --color-ink: #0B0B0B;
-  --color-muted: #2B2B2B;
-  --color-faint: #3D3D3D;
+  color: #111111;
+  --color-ink: #111111;
+  --color-muted: #3B3935;
+  --color-faint: #4A4741;
   --color-line: rgba(20, 17, 15, 0.28);
-  --color-signal: #0B0B0B;
+  --color-signal: #111111;
 }
 
 .stack-card .stack-inset {
-  background: #0B0B0B;
+  background: #F8F6F1;
   border-radius: 2px;
   padding: 1rem;
-  color: #F2F0EB;
-  --color-ink: #F2F0EB;
-  --color-muted: #A6A6A6;
-  --color-faint: #8C8C8C;
-  --color-line: #262626;
-  --color-signal: #FF7036;
+  color: #111111;
+  --color-ink: #111111;
+  --color-muted: #55524C;
+  --color-faint: #66625A;
+  --color-line: #D6D1C6;
+  --color-signal: #B93D0E;
 }
 
 .tone-ink {
-  --color-ink: #0B0B0B;
-  --color-muted: #2B2B2B;
-  --color-faint: #3D3D3D;
+  --color-ink: #111111;
+  --color-muted: #3B3935;
+  --color-faint: #4A4741;
   --color-line: rgba(20, 17, 15, 0.28);
 }
 
 .tone-ink :focus-visible,
 .tone-ink:focus-visible {
-  outline-color: #0B0B0B;
+  outline-color: #111111;
 }
 
 .line-mask {
@@ -770,7 +771,7 @@ html[data-motion='paused'] :is(.packet-walk, .node-ring, .frame-bar, .probe-blin
   }
 
   .work-row:hover .work-text {
-    color: #0B0B0B;
+    color: #111111;
   }
 
   .work-row:hover .work-live {
@@ -784,7 +785,7 @@ html[data-motion='paused'] :is(.packet-walk, .node-ring, .frame-bar, .probe-blin
 }
 
 .work-row:focus-visible .work-text {
-  color: #0B0B0B;
+  color: #111111;
 }
 
 .work-row:focus-visible .work-live {
@@ -803,3 +804,38 @@ html[data-motion='paused'] :is(.packet-walk, .node-ring, .frame-bar, .probe-blin
     transition: none;
   }
 }
+
+.story { font-family: var(--font-mono); overflow: visible; }
+.story .st-box rect.st-shape, .story .st-doc rect.st-shape { fill: #FFFFFF; stroke: var(--color-ink); stroke-width: 1.25; }
+.story .st-flash { fill: #FFE1D2; opacity: 0; }
+.story .st-label { font-size: 11px; fill: var(--color-ink); }
+.story .st-sub { font-size: 9px; fill: var(--color-faint); }
+.story .st-path { fill: none; stroke: var(--color-ink); stroke-width: 1.25; }
+.story .st-path.is-dashed { stroke-dasharray: 4 4; }
+.story .st-docline { stroke: var(--color-line); stroke-width: 1; }
+.story .st-region rect { fill: none; stroke: var(--color-flame); stroke-width: 1.25; stroke-dasharray: 3 3; }
+.story .st-region text { font-size: 9px; fill: var(--color-signal); }
+.story .st-token { fill: var(--color-flame); }
+.story .st-stamp-check { fill: var(--color-ink); }
+.story .st-stamp-cross { fill: var(--color-flame); }
+.story .st-mark { stroke: #FFFFFF; stroke-width: 2; fill: none; stroke-linecap: round; }
+.story .st-bar { fill: var(--color-ink); }
+.story .st-row { fill: var(--color-panel); }
+.story .st-track { fill: none; stroke: var(--color-line); }
+.story .st-fill { fill: var(--color-flame); }
+.story .st-text { fill: var(--color-ink); }
+.story .st-text.is-muted { fill: var(--color-muted); }
+.story .st-text.is-accent { fill: var(--color-signal); }
+.story .st-clock { fill: #FFFFFF; stroke: var(--color-ink); stroke-width: 1.25; }
+.story .st-hand { stroke: var(--color-flame); stroke-width: 2; stroke-linecap: round; }
+.story .st-bubble-right { fill: var(--color-ink); }
+.story .st-bubble-left { fill: #FFFFFF; stroke: var(--color-ink); stroke-width: 1.25; }
+.story .st-bubble-text-right { fill: #FFFFFF; font-size: 10px; }
+.story .st-bubble-text-left { fill: var(--color-ink); font-size: 10px; }
+.story .st-scan { fill: var(--color-flame); opacity: 0.85; }
+.story [data-anim] { transform-box: fill-box; transform-origin: center; }
+.probe-dock-offset { transition: bottom 200ms ease-out; }
+@media (max-width: 767px) {
+  html[data-dock="on"] .probe-dock-offset { bottom: calc(4.5rem + env(safe-area-inset-bottom)); }
+}
+html[data-menu="open"] [data-testid="mobile-dock"] { display: none; }

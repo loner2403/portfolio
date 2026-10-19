@@ -37,6 +37,6 @@ else createRoot(root).render(element)
 if (typeof window !== 'undefined') {
   console.log(
     '%cOh hello, fellow nosy developer. The probe lives at /api/ask. Try Ctrl K.',
-    'color: #FF7036',
+    'color: #B93D0E',
   )
 }
