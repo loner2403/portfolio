@@ -43,7 +43,7 @@ export const GENERAL_INFO = {
     location: 'Mumbai, India',
     timezone: 'Asia/Kolkata',
     site: 'harshallade.site',
-    resumeUrl: '/My_Resume.pdf',
+    resumeUrl: '',
 
     emailSubject: "Let's work on a project together",
     emailBody: 'Hi Harshal, I am reaching out to you because...',
@@ -380,7 +380,7 @@ export const PROJECTS: ProjectType[] = [
         slug: 'thumbnail-ai',
         liveUrl: '',
         year: 2024,
-        description: `A credit-based SaaS for creating thumbnails. Background removal runs in the browser in a web worker, with an editor for text, effects and filters.\n\nClerk authentication with webhook-synced users, Razorpay checkout for credit packs (10 free credits on signup, Rs 10 per credit) and server-side credit deduction, plus landing, pricing and dashboard pages.`,
+        description: `A credit-based SaaS for creating thumbnails. Background removal runs in the browser in a web worker, with an editor for text, effects and filters.\n\nClerk authentication with webhook-synced users, Razorpay checkout for credit packs (10 free credits on signup, about $0.12 per credit) and server-side credit deduction, plus landing, pricing and dashboard pages.`,
         role: `Sole developer: designed and built the full product: generation pipeline, template editor, and batch processing on Cloudflare infrastructure.`,
         techStack: [
             'Next.js',

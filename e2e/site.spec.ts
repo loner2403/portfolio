@@ -143,8 +143,14 @@ test.describe('home page', () => {
     expect(unsafe).toEqual([])
   })
 
-  test('résumé link resolves', async ({ page, request }) => {
+  test('résumé link is shown only when it resolves', async ({ page, request }) => {
     await gotoReady(page)
+    const links = page.locator('#contact a', { hasText: 'Résumé' })
+    if (!GENERAL_INFO.resumeUrl) {
+      await expect(links).toHaveCount(0)
+      return
+    }
+    await expect(links).toHaveCount(1)
     const res = await request.get(GENERAL_INFO.resumeUrl)
     expect(res.status()).toBe(200)
   })

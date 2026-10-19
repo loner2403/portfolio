@@ -44,3 +44,10 @@ test('numbers are shown in dollars and the user count is approximate', () => {
   assert.ok(s02.includes('~$35'))
   assert.ok(s04.includes('9K+'))
 })
+
+test('no rupee prices anywhere in site content', async () => {
+  const data = await import('../src/lib/data.ts')
+  const text = JSON.stringify(data)
+  assert.ok(!/Rs\.?\s?\d/.test(text), 'found a rupee figure')
+  assert.ok(text.includes('about $0.12 per credit'))
+})

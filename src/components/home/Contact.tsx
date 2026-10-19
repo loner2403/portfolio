@@ -95,9 +95,11 @@ export default function Contact() {
               LinkedIn ↗
             </a>
           )}
-          <a href={GENERAL_INFO.resumeUrl} target="_blank" rel="noopener noreferrer" className={LINK}>
-            Résumé ↗
-          </a>
+          {GENERAL_INFO.resumeUrl && (
+            <a href={GENERAL_INFO.resumeUrl} target="_blank" rel="noopener noreferrer" className={LINK}>
+              Résumé ↗
+            </a>
+          )}
         </div>
       </div>
     </Section>
