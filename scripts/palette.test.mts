@@ -22,19 +22,30 @@ function contrast(a: string, b: string): number {
   return (hi + 0.05) / (lo + 0.05)
 }
 
-test('warm palette tokens are exactly as specified', () => {
-  assert.equal(token('bg'), '#14110F')
-  assert.equal(token('panel'), '#1B1714')
-  assert.equal(token('panel-2'), '#231E19')
-  assert.equal(token('line'), '#2E2620')
-  assert.equal(token('ink'), '#F3EBDD')
-  assert.equal(token('muted'), '#A39683')
-  assert.equal(token('faint'), '#8F8372')
-  assert.equal(token('signal'), '#FFE899')
-  assert.equal(token('signal-ink'), '#14110F')
-  assert.equal(token('card-1'), '#FFE899')
-  assert.equal(token('card-2'), '#FFCE94')
-  assert.equal(token('card-3'), '#FF8A65')
+test('black and orange palette tokens are exactly as specified', () => {
+  assert.equal(token('bg'), '#0B0B0B')
+  assert.equal(token('panel'), '#141414')
+  assert.equal(token('panel-2'), '#1C1C1C')
+  assert.equal(token('line'), '#262626')
+  assert.equal(token('ink'), '#F2F0EB')
+  assert.equal(token('muted'), '#A6A6A6')
+  assert.equal(token('faint'), '#8C8C8C')
+  assert.equal(token('signal'), '#FF7036')
+  assert.equal(token('signal-ink'), '#0B0B0B')
+  assert.equal(token('card-1'), '#FF7036')
+  assert.equal(token('card-2'), '#EDE8DD')
+  assert.equal(token('card-3'), '#A8BDFF')
+})
+
+test('dark ink is readable on every card colour', () => {
+  for (const n of ['card-1', 'card-2', 'card-3']) assert.ok(contrast('#0B0B0B', token(n)) >= 7, n)
+})
+
+test('no leftover warm-gold or brown values outside the theme', () => {
+  const rest = css.slice(css.indexOf('}', css.indexOf('@theme')))
+  for (const old of ['#FFE899', '#FFCE94', '#FF8A65', '#14110F', '#1B1714', '#2E2620', '#F3EBDD', '#A39683', '#8F8372', '255, 232, 153']) {
+    assert.ok(!rest.toUpperCase().includes(old.toUpperCase()), `leftover ${old}`)
+  }
 })
 
 test('text and accent tokens meet WCAG contrast on the base', () => {

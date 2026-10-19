@@ -108,6 +108,20 @@ function buildPage(route, html) {
     'twitter:description',
     route,
   )
+  out = replaceTag(
+    out,
+    /(<meta property="og:image" content=")[^"]*(")/,
+    escapeHtml(meta.image),
+    'og:image',
+    route,
+  )
+  out = replaceTag(
+    out,
+    /(<meta name="twitter:image" content=")[^"]*(")/,
+    escapeHtml(meta.image),
+    'twitter:image',
+    route,
+  )
 
   return out
 }

@@ -129,3 +129,7 @@ Source: REA captures of jlern.com, pilato.it, kyoosangchoi.com, eemonroy.com, es
 - Reveals use a clip-path inset wipe (power3.out, staggered) instead of a plain fade.
 - Route changes add a full-viewport clip-path wipe in the signal colour. Reduced motion and the first load skip it.
 - Relaxed for this pass: sticky stacking and clip-path animation are allowed, and the transform/opacity-only rule does not apply to clip-path. Still banned: custom cursor, particles, preloader, WebGL, gradient text, pill buttons.
+
+## V3.6 addendum - palette B (owner-approved 2026-10-19, supersedes Palette A "Warm")
+
+Black + international orange: base #0B0B0B, ink #F2F0EB, signal #FF7036 (7.1:1 on base), cards #FF7036 / #EDE8DD / #A8BDFF with #0B0B0B ink. The warm gold palette is retired. Full spec: docs/V3.6-PLAN.md.

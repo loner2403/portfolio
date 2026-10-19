@@ -81,7 +81,7 @@
   ],
   "rewrites": [
     {
-      "source": "/projects/:slug(vyapardrishti|thumbnail-ai|medium-blog-clone|resume-roaster)",
+      "source": "/projects/:slug(vyapardrishti|meeting-assistant|thumbnail-ai|medium-blog-clone|resume-roaster)",
       "destination": "/index.html"
     },
     {

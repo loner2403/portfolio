@@ -181,14 +181,14 @@ test.describe('home page', () => {
     await expect(stack.locator('.rounded-sm.border')).toHaveCount(0)
   })
 
-  test('contact is a signal colour block with readable ink', async ({ page }) => {
+  test('contact is an orange block with readable ink', async ({ page }) => {
     await gotoReady(page)
     const colours = await page.locator('#contact').evaluate((el) => {
       const style = getComputedStyle(el)
       const heading = el.querySelector('h2') as HTMLElement
       return { bg: style.backgroundColor, ink: getComputedStyle(heading).color }
     })
-    expect(colours.bg).toBe('rgb(255, 232, 153)')
+    expect(colours.bg).toBe('rgb(255, 112, 54)')
     expect(contrast(colours.bg, colours.ink)).toBeGreaterThanOrEqual(7)
   })
 
@@ -304,7 +304,7 @@ test.describe('work and project pages', () => {
       const header = page.getByTestId('project-header')
       await expect(header).toBeVisible()
       const bg = await header.evaluate((el) => getComputedStyle(el).backgroundColor)
-      expect(['rgb(255, 232, 153)', 'rgb(255, 206, 148)', 'rgb(255, 138, 101)']).toContain(bg)
+      expect(['rgb(255, 112, 54)', 'rgb(237, 232, 221)', 'rgb(168, 189, 255)']).toContain(bg)
       await expect(page.getByTestId('project-visual')).toHaveCount(1)
     }
   })
@@ -355,14 +355,14 @@ test.describe('V3.4 sections', () => {
     }
   })
 
-  test('404 is a coral block with a heading and a way back', async ({ page }) => {
+  test('404 is a periwinkle block with a heading and a way back', async ({ page }) => {
     await gotoReady(page, '/projects/does-not-exist')
     const block = page.getByTestId('not-found')
     const colours = await block.evaluate((el) => ({
       bg: getComputedStyle(el).backgroundColor,
       ink: getComputedStyle(el.querySelector('h1') as HTMLElement).color,
     }))
-    expect(colours.bg).toBe('rgb(255, 138, 101)')
+    expect(colours.bg).toBe('rgb(168, 189, 255)')
     expect(contrast(colours.bg, colours.ink)).toBeGreaterThanOrEqual(7)
     await expect(page.locator('main h1')).toHaveCount(1)
     await expect(block.locator('a[href="/"]')).toHaveCount(1)
@@ -505,6 +505,79 @@ test.describe('system case studies without javascript', () => {
   })
 })
 
+test.describe('V3.6 readable case studies', () => {
+  const studied = [
+    ...SYSTEMS.map((s) => ({ path: `/systems/${s.slug}`, study: s.caseStudy, key: `systems-${s.slug}` })),
+    ...PROJECTS.filter((p) => p.caseStudy).map((p) => ({ path: `/projects/${p.slug}`, study: p.caseStudy!, key: `projects-${p.slug}` })),
+  ]
+
+  test('every case opens with its tl;dr and renders all sections', async ({ page }) => {
+    for (const { path, study } of studied) {
+      await gotoReady(page, path)
+      await expect(page.getByTestId('case-tldr')).toContainText(study.tldr)
+      await expect(page.getByTestId('case-problem')).toContainText(study.problem)
+      await expect(page.getByTestId('case-built').locator('li')).toHaveCount(study.built.length)
+      await expect(page.getByTestId('case-decision')).toHaveCount(study.decisions.length)
+      await expect(page.getByTestId('case-result')).toHaveCount(study.results.length)
+    }
+  })
+
+  test('case text is large enough and lines stay readable', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+    for (const { path } of studied) {
+      await gotoReady(page, path)
+      const m = await page.evaluate(() => {
+        const px = (el: Element) => Number.parseFloat(getComputedStyle(el).fontSize)
+        const problem = document.querySelector('[data-testid="case-problem"] p') as HTMLElement
+        const built = document.querySelector('[data-testid="case-built"] li') as HTMLElement
+        const decision = document.querySelector('[data-testid="case-decision"] p') as HTMLElement
+        const heading = document.querySelector('[data-testid="case-problem"] h2') as HTMLElement
+        return {
+          problemSize: px(problem),
+          problemMeasure: problem.getBoundingClientRect().width / px(problem),
+          builtSize: px(built.querySelector('span:last-child') ?? built),
+          decisionSize: px(decision),
+          decisionMeasure: decision.getBoundingClientRect().width / px(decision),
+          headingSize: px(heading),
+        }
+      })
+      expect(m.problemSize, path).toBeGreaterThanOrEqual(18)
+      expect(m.builtSize, path).toBeGreaterThanOrEqual(17)
+      expect(m.decisionSize, path).toBeGreaterThanOrEqual(16)
+      expect(m.headingSize, path).toBeGreaterThanOrEqual(28)
+      expect(m.problemMeasure, path).toBeLessThanOrEqual(36)
+      expect(m.decisionMeasure, path).toBeLessThanOrEqual(38)
+    }
+  })
+
+  test('meeting assistant is listed in work and has no source link', async ({ page }) => {
+    await gotoReady(page)
+    await expect(page.locator('[data-testid="work-row"][href="/projects/meeting-assistant"]')).toHaveCount(1)
+    await gotoReady(page, '/projects/meeting-assistant')
+    await expect(page.getByText('Private codebase, not public')).toBeVisible()
+    const body = (await page.locator('body').innerText()).toLowerCase()
+    expect(body.includes('cluely')).toBe(false)
+  })
+})
+
+test.describe('share previews without javascript', () => {
+  test.use({ javaScriptEnabled: false })
+
+  test('each route points to its own share image', async ({ page }) => {
+    const routes = [
+      { path: '/', key: 'home' },
+      ...SYSTEMS.map((s) => ({ path: `/systems/${s.slug}/`, key: `systems-${s.slug}` })),
+      ...PROJECTS.map((p) => ({ path: `/projects/${p.slug}/`, key: `projects-${p.slug}` })),
+    ]
+    for (const { path, key } of routes) {
+      await page.goto(path)
+      const url = `https://harshallade.site/og/${key}.png`
+      await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', url)
+      await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute('content', url)
+    }
+  })
+})
+
 test.describe('touch devices', () => {
   test.use({ hasTouch: true, isMobile: true, viewport: { width: 390, height: 844 } })
 
@@ -552,7 +625,7 @@ test.describe('reduced motion', () => {
     await expect(page.getByTestId('project-detail')).toBeVisible()
     const wipe = await page.evaluate(() =>
       Array.from(document.querySelectorAll<HTMLElement>('div.fixed.inset-0')).filter(
-        (el) => getComputedStyle(el).backgroundColor === 'rgb(255, 232, 153)',
+        (el) => getComputedStyle(el).backgroundColor === 'rgb(255, 112, 54)',
       ).length,
     )
     expect(wipe).toBe(0)

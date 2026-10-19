@@ -43,14 +43,21 @@ function toPlainText(text: string): string {
   return text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
 }
 
-export function routeMeta(url: string): { title: string; description: string; canonical: string } {
+export function routeMeta(url: string): {
+  title: string
+  description: string
+  canonical: string
+  image: string
+} {
   const path = url.split(/[?#]/)[0].replace(/\/+$/, '') || '/'
+  const homeImage = `${SITE_URL}/og/home.png`
 
   if (path === '/') {
     return {
       title: SITE_TITLE,
       description: SITE_DESCRIPTION,
       canonical: `${SITE_URL}/`,
+      image: homeImage,
     }
   }
 
@@ -60,6 +67,7 @@ export function routeMeta(url: string): { title: string; description: string; ca
       title: `${system.title} | Harshal Lade`,
       description: truncate(system.summary, 155),
       canonical: `${SITE_URL}/systems/${system.slug}`,
+      image: `${SITE_URL}/og/systems-${system.slug}.png`,
     }
   }
 
@@ -70,6 +78,7 @@ export function routeMeta(url: string): { title: string; description: string; ca
       title: SITE_TITLE,
       description: SITE_DESCRIPTION,
       canonical: `${SITE_URL}/`,
+      image: homeImage,
     }
   }
 
@@ -77,5 +86,6 @@ export function routeMeta(url: string): { title: string; description: string; ca
     title: `${project.title} | Harshal Lade`,
     description: truncate(toPlainText(project.description), 155),
     canonical: `${SITE_URL}/projects/${project.slug}`,
+    image: `${SITE_URL}/og/projects-${project.slug}.png`,
   }
 }

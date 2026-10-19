@@ -1,3 +1,13 @@
+export interface CaseStudy {
+    period: string;
+    role: string;
+    tldr: string;
+    problem: string;
+    built: string[];
+    decisions: { title: string; body: string }[];
+    results: { value: string; label: string; note: string }[];
+}
+
 export interface ProjectType {
     title: string;
     slug: string;
@@ -10,6 +20,7 @@ export interface ProjectType {
     longThumbnail: string;
     images: string[];
     sourceCode?: string;
+    caseStudy?: CaseStudy;
 }
 
 export interface ExperienceType {
@@ -88,15 +99,6 @@ export const PRINCIPLES: { title: string; line: string; seen: string[] }[] = [
     { title: 'Evaluate before shipping', line: 'Evaluation harnesses decide whether a change is better, not a hunch.', seen: ['S-02'] },
 ];
 
-export interface CaseStudy {
-    period: string;
-    role: string;
-    problem: string;
-    built: string[];
-    decisions: { title: string; body: string }[];
-    results: { value: string; label: string; note: string }[];
-}
-
 export interface SystemType {
     id: string;
     slug: string;
@@ -125,6 +127,7 @@ export const SYSTEMS: SystemType[] = [
         caseStudy: {
             period: 'Bull AI · Sep 2025 to now',
             role: 'Software Engineer, AI & Data Platforms',
+            tldr: 'LangGraph research workflows for Indian equities that retrieve evidence, validate every output against a schema and keep a full run history.',
             problem: 'Equity research means reading market data, filings and annual reports for many companies and turning them into analysis people can act on. Doing it by hand does not scale, and a free-form LLM answer cannot be trusted or audited.',
             built: [
                 'LangGraph workflows for Indian equities covering market analysis, financial projections and annual-report processing.',
@@ -157,6 +160,7 @@ export const SYSTEMS: SystemType[] = [
         caseStudy: {
             period: 'Bull AI · Sep 2025 to now',
             role: 'Software Engineer, AI & Data Platforms',
+            tldr: 'A six-stage pipeline that extracts quarterly segment revenue from filings for about 3,000 listed companies, at 95 to 98% accuracy on a hand-checked sample.',
             problem: 'Segment-level revenue for listed Indian companies sits inside PDFs such as annual reports, results filings and presentations, often as scanned tables and charts. It has to be extracted for about 3,000 companies every quarter, and it has to be right.',
             built: [
                 'A six-stage pipeline (retrieve, OCR, parse, discover, extract, validate) that works through about 3,000 listed companies across 18 to 19 sectors, one company at a time.',
@@ -194,6 +198,7 @@ export const SYSTEMS: SystemType[] = [
         caseStudy: {
             period: 'Bull AI · Sep 2025 to now',
             role: 'Software Engineer, AI & Data Platforms',
+            tldr: 'Daily, checkpointed jobs that keep the master list of listed companies and their filing links in sync with both Indian exchanges.',
             problem: 'Every downstream system depends on an accurate master list of listed companies and links to their filings. Exchange data changes daily, and some of it is only reachable through slow, paginated web pages.',
             built: [
                 'A daily sync that downloads the latest company data from both Indian exchanges, shows what changed and then updates the master table in a relational store.',
@@ -224,6 +229,7 @@ export const SYSTEMS: SystemType[] = [
         caseStudy: {
             period: 'Bull AI · Sep 2025 to now',
             role: 'Software Engineer, AI & Data Platforms',
+            tldr: 'The streaming backend of a financial copilot that answers company questions from documents and data, used by about 9,000 active users.',
             problem: 'Visitors to the company website wanted quick answers about Indian companies (what a company does, how its numbers look, what its documents say) in a chat, not in a research report.',
             built: [
                 'The backend of an India-focused financial copilot: company lookup, financial snapshots, document Q&A and chart-ready answers.',
@@ -254,6 +260,7 @@ export const SYSTEMS: SystemType[] = [
         caseStudy: {
             period: 'Bull AI · Sep 2025 to now',
             role: 'Software Engineer, AI & Data Platforms',
+            tldr: 'Three scheduled and webhook-triggered batch workflows on Vertex AI and Gemini for earnings-call summaries, competitor analysis and revenue charts.',
             problem: 'Some analysis does not need a chat. Every quarter there are earnings calls to summarise, competitors to compare and revenue charts to refresh, for many companies at once.',
             built: [
                 'Three batch workflows on Vertex AI and Gemini: earnings-call summaries, competitor analysis and revenue visualisation.',
@@ -311,6 +318,62 @@ export const PROJECTS: ProjectType[] = [
         thumbnail: '',
         longThumbnail: '',
         images: [],
+        caseStudy: {
+            period: 'Paytm Build for India AI Hackathon · Oct 2026',
+            role: 'Backend and AI evaluation',
+            tldr: 'Turns photographed bills and spoken sales into one explainable stock-and-cash ledger for small shops, using AI only where the input is messy.',
+            problem: 'Small shop owners run on paper bills, often handwritten in Hinglish or Devanagari, and on memory for daily sales. They rarely know what to reorder, where cash is stuck or how much short-term funding they need.',
+            built: [
+                'A pipeline that reads photographed and handwritten supplier bills (including Hinglish and Devanagari) and spoken sales, and turns them into one stock-and-cash ledger.',
+                'Recommendations on what to reorder, where cash is trapped and how much short-term funding is needed.',
+                'A FastAPI service with 22 endpoints, about 5,600 lines of Python and 262 tests across 24 files.',
+            ],
+            decisions: [
+                { title: 'AI only where input is unstructured', body: 'Models extract structured events from bills and voice. Everything that involves money, from stock and finance arithmetic to reconciliation, is deterministic Python.' },
+                { title: 'Flag doubt instead of guessing', body: 'Rule-based confidence flags mark smudged rates and total mismatches so the owner can check them.' },
+                { title: 'Choose the model with evidence', body: 'An evaluation harness of 8 synthetic bills (smudged, skewed, handwritten and mismatched) and 14 voice clips compared 7 models on parse rate, item mapping, totals and latency.' },
+            ],
+            results: [
+                { value: '100%', label: 'bill-total and mismatch-flag accuracy', note: 'best of 7 models on the evaluation set' },
+                { value: '86%', label: 'correct stock movements from voice', note: 'on 14 voice clips' },
+                { value: '10 to 15 s', label: 'median time per bill', note: 'end-to-end processing' },
+                { value: '262', label: 'tests', note: 'across 24 files' },
+            ],
+        },
+    },
+    {
+        title: 'Local meeting assistant',
+        slug: 'meeting-assistant',
+        year: 2026,
+        description: `A desktop meeting assistant with a transcript panel, an answer panel, notes and a sessions dashboard. Live sessions transcribe the microphone and system audio on the computer itself, in English and Hindi.\n\nNo audio, transcript or request leaves the machine: the app has no network client, and tests check that it cannot reach one.`,
+        role: 'Sole developer',
+        techStack: ['Electron', 'TypeScript', 'Python', 'faster-whisper', 'Vitest', 'Playwright'],
+        thumbnail: '',
+        longThumbnail: '',
+        images: [],
+        caseStudy: {
+            period: 'Personal project · Oct 2026',
+            role: 'Sole developer',
+            tldr: 'A desktop meeting assistant that transcribes calls on your own computer, in English and Hindi, and never touches the network.',
+            problem: 'Meeting tools usually send your audio to a cloud service, which rules them out for sensitive calls. The goal was an assistant whose transcripts never leave the computer, with privacy promises that are checked by tests instead of stated in a policy.',
+            built: [
+                'An Electron app with a transcript panel, an answer panel, notes and a sessions dashboard with local history.',
+                'Live transcription of the microphone and system audio in English and Hindi by a local Python process using faster-whisper: large-v3-turbo on the GPU and base on the CPU.',
+                'Speech is cut into utterances at pauses, and every finished line is written to an on-disk journal before it appears, so a crash loses at most the line in flight and the next launch recovers the session.',
+                'Simulated sessions that replay hand-written fixtures, clearly labelled SIMULATED, for demos and tests.',
+            ],
+            decisions: [
+                { title: 'No network, enforced', body: 'Windows may load only the app\'s own scheme, every other request is cancelled, a strict Content-Security-Policy blocks outside content, and a test checks that the speech engine owns no sockets.' },
+                { title: 'Capture only after consent', body: 'Capture code lives in two allow-listed files that a static scan enforces. Permission is denied unless the user has started a live session, and every start and stop is logged; if the log cannot be written, capture is refused.' },
+                { title: 'Locked-down windows', body: 'Every window runs sandboxed with context isolation and no Node integration, behind a preload that exposes exactly fifteen methods.' },
+                { title: 'Test the real app', body: 'End-to-end tests drive the packaged app through Playwright, including a probe that confirms network requests are denied.' },
+            ],
+            results: [
+                { value: '160+', label: 'automated tests', note: 'across unit, end-to-end and speech-engine suites' },
+                { value: '2', label: 'languages', note: 'English and Hindi, transcribed on the device' },
+                { value: '0', label: 'network calls at runtime', note: 'checked by a socket test and a network-denial probe' },
+            ],
+        },
     },
     {
         title: 'Thumbnail AI',

@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 @theme static {
-  --color-bg: #14110F;
-  --color-panel: #1B1714;
-  --color-panel-2: #231E19;
-  --color-line: #2E2620;
-  --color-ink: #F3EBDD;
-  --color-muted: #A39683;
-  --color-faint: #8F8372;
-  --color-signal: #FFE899;
-  --color-signal-ink: #14110F;
-  --color-teal: #FFCE94;
-  --color-card-1: #FFE899;
-  --color-card-2: #FFCE94;
-  --color-card-3: #FF8A65;
+  --color-bg: #0B0B0B;
+  --color-panel: #141414;
+  --color-panel-2: #1C1C1C;
+  --color-line: #262626;
+  --color-ink: #F2F0EB;
+  --color-muted: #A6A6A6;
+  --color-faint: #8C8C8C;
+  --color-signal: #FF7036;
+  --color-signal-ink: #0B0B0B;
+  --color-teal: #EDE8DD;
+  --color-card-1: #FF7036;
+  --color-card-2: #EDE8DD;
+  --color-card-3: #A8BDFF;
 
   --font-sans: "Space Grotesk Variable", system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
@@ -173,7 +173,7 @@
 
 .edge-base {
   fill: none;
-  stroke: #34423A;
+  stroke: #3A3A3A;
   stroke-width: 1.5;
 }
 
@@ -184,14 +184,14 @@
 
 .edge-dashed {
   fill: none;
-  stroke: #3C4A41;
+  stroke: #444444;
   stroke-width: 1.25;
   stroke-dasharray: 4 5;
 }
 
 .flow-dash {
   fill: none;
-  stroke: rgba(255, 232, 153, 0.38);
+  stroke: rgba(255, 112, 54, 0.38);
   stroke-width: 1.75;
   stroke-linecap: round;
   stroke-dasharray: 2 11;
@@ -200,12 +200,12 @@
 
 .edge-flow-solid {
   fill: none;
-  stroke: rgba(255, 232, 153, 0.28);
+  stroke: rgba(255, 112, 54, 0.28);
   stroke-width: 1.5;
 }
 
 .group:hover .flow-dash {
-  stroke: rgba(255, 232, 153, 0.7);
+  stroke: rgba(255, 112, 54, 0.7);
 }
 
 .packet {
@@ -276,7 +276,7 @@
 .edge-label {
   font-family: var(--font-mono);
   font-size: 11px;
-  fill: #7B857E;
+  fill: #8C8C8C;
   paint-order: stroke;
   stroke: var(--color-bg);
   stroke-width: 4;
@@ -660,36 +660,36 @@ html[data-motion='paused'] :is(.packet-walk, .node-ring, .frame-bar, .probe-blin
 .stack-card {
   background: var(--card);
   border-color: transparent;
-  color: #14110F;
-  --color-ink: #14110F;
-  --color-muted: #2E261F;
-  --color-faint: #3A3128;
+  color: #0B0B0B;
+  --color-ink: #0B0B0B;
+  --color-muted: #2B2B2B;
+  --color-faint: #3D3D3D;
   --color-line: rgba(20, 17, 15, 0.28);
-  --color-signal: #14110F;
+  --color-signal: #0B0B0B;
 }
 
 .stack-card .stack-inset {
-  background: #14110F;
+  background: #0B0B0B;
   border-radius: 2px;
   padding: 1rem;
-  color: #F3EBDD;
-  --color-ink: #F3EBDD;
-  --color-muted: #A39683;
-  --color-faint: #8F8372;
-  --color-line: #2E2620;
-  --color-signal: #FFE899;
+  color: #F2F0EB;
+  --color-ink: #F2F0EB;
+  --color-muted: #A6A6A6;
+  --color-faint: #8C8C8C;
+  --color-line: #262626;
+  --color-signal: #FF7036;
 }
 
 .tone-ink {
-  --color-ink: #14110F;
-  --color-muted: #2E261F;
-  --color-faint: #3A3128;
+  --color-ink: #0B0B0B;
+  --color-muted: #2B2B2B;
+  --color-faint: #3D3D3D;
   --color-line: rgba(20, 17, 15, 0.28);
 }
 
 .tone-ink :focus-visible,
 .tone-ink:focus-visible {
-  outline-color: #14110F;
+  outline-color: #0B0B0B;
 }
 
 .line-mask {
@@ -729,7 +729,7 @@ html[data-motion='paused'] :is(.packet-walk, .node-ring, .frame-bar, .probe-blin
   }
 
   .work-row:hover .work-text {
-    color: #14110F;
+    color: #0B0B0B;
   }
 
   .work-row:hover .work-live {
@@ -743,7 +743,7 @@ html[data-motion='paused'] :is(.packet-walk, .node-ring, .frame-bar, .probe-blin
 }
 
 .work-row:focus-visible .work-text {
-  color: #14110F;
+  color: #0B0B0B;
 }
 
 .work-row:focus-visible .work-live {

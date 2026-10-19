@@ -6,6 +6,7 @@ import { cardVar } from '@/lib/cards'
 import { IMAGE_SIZES } from '@/lib/image-sizes'
 import { SITE_DESCRIPTION, truncate, useDocumentMeta } from '@/lib/seo'
 import Container from '@/components/layout/Container'
+import CaseBody from '@/components/case/CaseBody'
 import NotFound from './NotFound'
 
 function renderPlainText(text: string): ReactNode[] {
@@ -137,6 +138,12 @@ export default function ProjectPage() {
               {project.role.includes('<') ? parse(project.role) : project.role}
             </div>
           )}
+
+          {project.caseStudy && (
+            <p className="mt-6 font-mono text-xs text-ink">
+              {project.caseStudy.period}
+            </p>
+          )}
         </Container>
       </header>
 
@@ -170,7 +177,11 @@ export default function ProjectPage() {
           <p className="mt-6 font-mono text-sm text-muted">Private codebase, not public</p>
         )}
 
-        <Description description={project.description} />
+        {project.caseStudy ? (
+          <CaseBody study={project.caseStudy} accent={cardVar(currentIndex)} />
+        ) : (
+          <Description description={project.description} />
+        )}
         <Visual project={project} />
 
         <div className="mt-16 border-t border-line pt-6">

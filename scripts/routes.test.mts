@@ -53,3 +53,35 @@ test('case study copy has no em or en dashes', () => {
   const text = JSON.stringify(SYSTEMS.map((system) => system.caseStudy))
   assert.ok(!/[–—]/.test(text))
 })
+
+test('every case study has a short tl;dr', () => {
+  const studies = [
+    ...SYSTEMS.map((system) => [system.id, system.caseStudy] as const),
+    ...PROJECTS.filter((project) => project.caseStudy).map((project) => [project.slug, project.caseStudy!] as const),
+  ]
+  for (const [id, study] of studies) {
+    assert.ok(study.tldr.length > 40 && study.tldr.length <= 200, `${id} tldr length ${study.tldr.length}`)
+    assert.ok(!/[\u2013\u2014]/.test(JSON.stringify(study)), `${id} dash`)
+  }
+})
+
+test('project case studies exist for vyapardrishti and the meeting assistant', () => {
+  for (const slug of ['vyapardrishti', 'meeting-assistant']) {
+    const project = PROJECTS.find((item) => item.slug === slug)
+    assert.ok(project?.caseStudy, slug)
+    assert.ok(project.caseStudy.built.length >= 3 && project.caseStudy.decisions.length >= 2, slug)
+  }
+})
+
+test('the meeting assistant never mentions the product it was modelled on', () => {
+  const text = JSON.stringify(PROJECTS).toLowerCase()
+  assert.ok(!text.includes('cluely'))
+})
+
+test('every route has a share image on disk', async () => {
+  const { existsSync } = await import('node:fs')
+  const keys = ['home', ...SYSTEMS.map((s) => `systems-${s.slug}`), ...PROJECTS.map((p) => `projects-${p.slug}`)]
+  for (const key of keys) {
+    assert.ok(existsSync(new URL(`../public/og/${key}.png`, import.meta.url)), key)
+  }
+})

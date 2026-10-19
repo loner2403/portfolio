@@ -97,11 +97,16 @@ const systemChunks: Chunk[] = SYSTEMS.map((system) => ({
   title: `${system.id} ${system.title}`,
   text: join([
     system.summary,
+    system.caseStudy.tldr,
     system.stages?.length ? `Stages: ${system.stages.join(' then ')}` : '',
     ...system.highlights,
+    system.caseStudy.problem,
+    ...system.caseStudy.built,
+    ...system.caseStudy.decisions.map((d) => `${d.title}: ${d.body}`),
+    ...system.caseStudy.results.map((r) => `${r.value} ${r.label}, ${r.note}`),
     `Stack: ${system.stack.join(', ')}`,
   ]),
-  anchor: `#system-${system.id}`,
+  anchor: `/systems/${system.slug}`,
 }))
 
 const principleChunks: Chunk[] = PRINCIPLES.map((principle, index) => ({
@@ -139,6 +144,15 @@ const projectChunks: Chunk[] = PROJECTS.map((project) => ({
     project.role ? plain(project.role) : '',
     `Tech: ${project.techStack.join(', ')}`,
     project.liveUrl ? `Live site: ${project.liveUrl}` : '',
+    ...(project.caseStudy
+      ? [
+          project.caseStudy.tldr,
+          project.caseStudy.problem,
+          ...project.caseStudy.built,
+          ...project.caseStudy.decisions.map((d) => `${d.title}: ${d.body}`),
+          ...project.caseStudy.results.map((r) => `${r.value} ${r.label}, ${r.note}`),
+        ]
+      : []),
   ]),
   anchor: `/projects/${project.slug}`,
 }))
