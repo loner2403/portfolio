@@ -7,13 +7,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const outDir = path.join(root, 'public', 'og')
 const { SYSTEMS, PROJECTS } = await import(pathToFileURL(path.join(root, 'src/lib/data.ts')).href)
 
-const fontDir = path.join(root, 'node_modules/@fontsource/instrument-serif/files')
-let fontFile = path.join(fontDir, 'instrument-serif-latin-400-normal.woff2')
-if (!fs.existsSync(fontFile)) {
-  const match = fs.readdirSync(fontDir).find((name) => name.endsWith('latin-400-normal.woff2'))
-  if (!match) throw new Error(`no latin-400-normal.woff2 in ${fontDir}`)
-  fontFile = path.join(fontDir, match)
-}
+const fontFile = path.join(root, 'src/assets/fonts/archivo-expanded-800-latin.woff2')
 const fontBase64 = fs.readFileSync(fontFile).toString('base64')
 
 const CARDS = ['#FF7036', '#EDE8DD', '#A8BDFF']
@@ -63,12 +57,12 @@ function template(entry) {
 <head>
 <meta charset="utf-8">
 <style>
-@font-face { font-family: 'IS'; src: url(data:font/woff2;base64,${fontBase64}) format('woff2'); }
+@font-face { font-family: 'AX'; font-weight: 800; src: url(data:font/woff2;base64,${fontBase64}) format('woff2'); }
 html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
 body { background: #0B0B0B; padding: 72px; box-sizing: border-box; display: flex; flex-direction: column; }
 .bar { width: 160px; height: 24px; background: ${entry.accent}; }
 .kicker { margin-top: 40px; font-family: monospace; font-size: 22px; letter-spacing: 0.12em; color: #A6A6A6; }
-.title { margin: 28px 0 0; font-family: 'IS', serif; font-weight: 400; font-size: 108px; line-height: 0.95; color: #F2F0EB; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.title { margin: 28px 0 0; font-family: 'AX', sans-serif; font-weight: 800; font-size: 76px; line-height: 1.0; letter-spacing: -0.01em; color: #F2F0EB; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
 .line { margin: 28px 0 0; max-width: 980px; font-family: system-ui, sans-serif; font-size: 30px; line-height: 1.35; color: #F2F0EB; opacity: 0.85; }
 </style>
 </head>

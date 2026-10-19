@@ -27,6 +27,17 @@ await build({
 
 const template = fs.readFileSync(templatePath, 'utf8')
 
+const assetsDir = path.join(distDir, 'assets')
+const assetFiles = fs.readdirSync(assetsDir)
+const preloadFonts = [
+  assetFiles.find((f) => /^archivo-expanded-800-latin-.*\.woff2$/.test(f)),
+  assetFiles.find((f) => /^space-grotesk-latin-wght-normal-.*\.woff2$/.test(f)),
+]
+if (preloadFonts.some((f) => !f)) throw new Error('font files to preload were not found in dist/assets')
+const preloadTags = preloadFonts
+  .map((f) => `<link rel="preload" href="/assets/${f}" as="font" type="font/woff2" crossorigin>`)
+  .join('\n    ')
+
 const { render, ROUTES, routeMeta } = await import(
   pathToFileURL(path.join(distServerDir, 'entry-server.js')).href
 )
@@ -122,6 +133,12 @@ function buildPage(route, html) {
     'twitter:image',
     route,
   )
+
+  const stylesheetMarker = '<link rel="stylesheet"'
+  if (!out.includes(stylesheetMarker)) {
+    throw new Error(`${route}: no stylesheet link found in dist/index.html`)
+  }
+  out = out.replace(stylesheetMarker, () => `${preloadTags}\n    ${stylesheetMarker}`)
 
   return out
 }

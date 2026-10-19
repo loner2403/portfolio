@@ -221,7 +221,8 @@ test.describe('home page', () => {
     await gotoReady(page)
     const footer = await page.locator('footer').innerText()
     expect(footer).not.toMatch(/\b(\w+) \1\b/i)
-    expect(footer).toContain('Instrument Serif')
+    expect(footer).toContain('Archivo')
+    expect(footer).not.toContain('Instrument Serif')
   })
 })
 
@@ -575,6 +576,72 @@ test.describe('share previews without javascript', () => {
       await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', url)
       await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute('content', url)
     }
+  })
+})
+
+test.describe('V3.7 first impression', () => {
+  test('hero name uses Archivo Expanded in caps', async ({ page }) => {
+    await gotoReady(page)
+    await page.evaluate(() => document.fonts.ready)
+    const style = await page.locator('[data-testid="hero"] p.font-display').evaluate((el) => {
+      const cs = getComputedStyle(el)
+      return { family: cs.fontFamily, transform: cs.textTransform, loaded: document.fonts.check('800 64px "Archivo Expanded"') }
+    })
+    expect(style.family).toContain('Archivo Expanded')
+    expect(style.transform).toBe('uppercase')
+    expect(style.loaded).toBe(true)
+  })
+
+  test('hero actions start animating within 400ms', async ({ page }) => {
+    await gotoReady(page)
+    const delays = await page.locator('[data-testid="hero"] .fade-up, [data-testid="hero"] .rise').evaluateAll((els) =>
+      els.map((el) => Number.parseFloat(getComputedStyle(el).animationDelay) * 1000),
+    )
+    expect(delays.length).toBeGreaterThan(0)
+    for (const d of delays) expect(d).toBeLessThanOrEqual(400)
+  })
+
+  test('the hero lead and actions are visible from the first frame', async ({ page }) => {
+    await page.goto('/')
+    const opacities = await page.locator('[data-testid="hero"] .rise').evaluateAll((els) =>
+      els.map((el) => getComputedStyle(el).opacity),
+    )
+    expect(opacities.length).toBeGreaterThanOrEqual(2)
+    for (const o of opacities) expect(o).toBe('1')
+  })
+
+  test('mobile layout shift stays under 0.05 on a slow 4G phone', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 })
+    const cdp = await page.context().newCDPSession(page)
+    await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 })
+    await cdp.send('Network.emulateNetworkConditions', { offline: false, latency: 150, downloadThroughput: (1.6 * 1024 * 1024) / 8, uploadThroughput: (750 * 1024) / 8 })
+    await page.addInitScript(() => {
+      ;(window as unknown as { __cls: number }).__cls = 0
+      new PerformanceObserver((list) => {
+        for (const entry of list.getEntries() as unknown as { value: number; hadRecentInput: boolean }[]) {
+          if (!entry.hadRecentInput) (window as unknown as { __cls: number }).__cls += entry.value
+        }
+      }).observe({ type: 'layout-shift', buffered: true })
+    })
+    await page.goto('/')
+    await page.waitForTimeout(5000)
+    const cls = await page.evaluate(() => (window as unknown as { __cls: number }).__cls)
+    expect(cls).toBeLessThan(0.05)
+  })
+})
+
+test.describe('V3.7 prerendered head and mobile diagram', () => {
+  test.use({ javaScriptEnabled: false, viewport: { width: 375, height: 812 } })
+
+  test('fonts are preloaded and the compact hero diagram is chosen by css', async ({ page }) => {
+    await page.goto('/')
+    const preloads = await page.locator('link[rel="preload"][as="font"]').evaluateAll((links) =>
+      links.map((l) => ({ href: l.getAttribute('href') ?? '', type: l.getAttribute('type'), cross: l.hasAttribute('crossorigin') })),
+    )
+    expect(preloads.some((p) => p.href.includes('archivo-expanded') && p.type === 'font/woff2' && p.cross)).toBe(true)
+    expect(preloads.some((p) => p.href.includes('space-grotesk-latin') && p.type === 'font/woff2' && p.cross)).toBe(true)
+    await expect(page.locator('[data-hero-variant="compact"]')).toBeVisible()
+    await expect(page.locator('[data-hero-variant="wide"]')).toBeHidden()
   })
 })
 

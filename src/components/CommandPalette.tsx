@@ -9,8 +9,8 @@ const itemClass =
 
 const headingClass = 'block px-3 py-2 text-[11px] uppercase tracking-[0.08em] text-faint'
 
-export default function CommandPalette() {
-  const [open, setOpen] = useState(false)
+export default function CommandPalette({ initialOpen = false }: { initialOpen?: boolean }) {
+  const [open, setOpen] = useState(initialOpen)
   const navigate = useNavigate()
   const { pathname } = useLocation()
 

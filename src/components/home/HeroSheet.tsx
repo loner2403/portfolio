@@ -7,20 +7,6 @@ import { HERO_COMPACT, HERO_WALK_COMPACT, HERO_WALK_LABEL, HERO_WALK_WIDE, HERO_
 const TOP_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
 const SIDE_NUMBERS = ['1', '2', '3', '4', '5']
 
-function useIsCompact() {
-  const [isCompact, setIsCompact] = useState(false)
-
-  useEffect(() => {
-    const query = window.matchMedia('(max-width: 767px)')
-    const update = () => setIsCompact(query.matches)
-    update()
-    query.addEventListener('change', update)
-    return () => query.removeEventListener('change', update)
-  }, [])
-
-  return isCompact
-}
-
 export default function HeroSheet({
   activeId,
   onActiveChange,
@@ -32,12 +18,9 @@ export default function HeroSheet({
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
   const reduced = mounted && prefersReduced
-  const isCompact = useIsCompact()
   const [hovered, setHovered] = useState<string | null>(null)
   const [stopped, setStopped] = useState(false)
   const [isMac, setIsMac] = useState(false)
-
-  const spec = isCompact ? HERO_COMPACT : HERO_WIDE
 
   const effective = hovered ?? activeId ?? null
   const isSystemKey = effective !== null && /^s0[1-5]$/.test(effective)
@@ -106,56 +89,64 @@ export default function HeroSheet({
           }}
         />
 
-        {!isCompact && (
-          <>
-            <div
-              aria-hidden="true"
-              className="ruler-in pointer-events-none absolute inset-x-5 top-0 h-5"
-            >
-              <div className="flex h-full items-center justify-between">
-                {TOP_LETTERS.map((letter) => (
-                  <span key={letter} className="font-mono text-[10px] leading-none text-faint">
-                    {letter}
-                  </span>
-                ))}
-              </div>
-              <div
-                className="absolute bottom-0 left-0 right-0 h-1"
-                style={{
-                  backgroundImage:
-                    'repeating-linear-gradient(to right, var(--color-faint) 0 1px, transparent 1px 32px)',
-                }}
-              />
-            </div>
-            <div
-              aria-hidden="true"
-              className="ruler-in pointer-events-none absolute inset-y-5 left-0 w-5"
-            >
-              <div className="flex h-full flex-col justify-between">
-                {SIDE_NUMBERS.map((number) => (
-                  <span key={number} className="font-mono text-[10px] leading-none text-faint">
-                    {number}
-                  </span>
-                ))}
-              </div>
-              <div
-                className="absolute right-0 top-0 bottom-0 w-1"
-                style={{
-                  backgroundImage:
-                    'repeating-linear-gradient(to bottom, var(--color-faint) 0 1px, transparent 1px 32px)',
-                }}
-              />
-            </div>
-          </>
-        )}
+        <div
+          aria-hidden="true"
+          className="ruler-in pointer-events-none absolute inset-x-5 top-0 h-5 hidden md:block"
+        >
+          <div className="flex h-full items-center justify-between">
+            {TOP_LETTERS.map((letter) => (
+              <span key={letter} className="font-mono text-[10px] leading-none text-faint">
+                {letter}
+              </span>
+            ))}
+          </div>
+          <div
+            className="absolute bottom-0 left-0 right-0 h-1"
+            style={{
+              backgroundImage:
+                'repeating-linear-gradient(to right, var(--color-faint) 0 1px, transparent 1px 32px)',
+            }}
+          />
+        </div>
+        <div
+          aria-hidden="true"
+          className="ruler-in pointer-events-none absolute inset-y-5 left-0 w-5 hidden md:block"
+        >
+          <div className="flex h-full flex-col justify-between">
+            {SIDE_NUMBERS.map((number) => (
+              <span key={number} className="font-mono text-[10px] leading-none text-faint">
+                {number}
+              </span>
+            ))}
+          </div>
+          <div
+            className="absolute right-0 top-0 bottom-0 w-1"
+            style={{
+              backgroundImage:
+                'repeating-linear-gradient(to bottom, var(--color-faint) 0 1px, transparent 1px 32px)',
+            }}
+          />
+        </div>
 
-        <div className={isCompact ? 'p-3' : 'pt-6 pb-8 pl-6 pr-3'}>
+        <div data-hero-variant="wide" className="hidden pt-6 pb-8 pl-6 pr-3 md:block">
           <FlowGraph
-            spec={spec}
+            spec={HERO_WIDE}
             label="Simulated architecture of an AI and data platform"
             interactive
             entrance="plot"
-            walk={isCompact ? HERO_WALK_COMPACT : HERO_WALK_WIDE}
+            walk={HERO_WALK_WIDE}
+            walkStopped={stopped}
+            activeId={activeId}
+            onActiveChange={handleActiveChange}
+          />
+        </div>
+        <div data-hero-variant="compact" className="p-3 md:hidden">
+          <FlowGraph
+            spec={HERO_COMPACT}
+            label="Simulated architecture of an AI and data platform"
+            interactive
+            entrance="plot"
+            walk={HERO_WALK_COMPACT}
             walkStopped={stopped}
             activeId={activeId}
             onActiveChange={handleActiveChange}

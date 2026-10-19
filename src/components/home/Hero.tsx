@@ -29,7 +29,7 @@ export default function Hero() {
           </span>
           <p
             aria-hidden="true"
-            className="mt-6 select-none font-display uppercase leading-[0.86] tracking-[-0.02em] text-[clamp(4rem,11vw,10.5rem)] text-ink"
+            className="mt-6 select-none font-display font-extrabold uppercase leading-[0.9] tracking-[-0.01em] text-[clamp(2.75rem,8.6vw,8.25rem)] text-ink"
           >
             <span className="line-mask">
               <span className="line-up" style={{ animationDelay: '0ms' }}>
@@ -37,7 +37,7 @@ export default function Hero() {
               </span>
             </span>
             <span className="line-mask pl-[10vw] text-card-1">
-              <span className="line-up" style={{ animationDelay: '120ms' }}>
+              <span className="line-up" style={{ animationDelay: '90ms' }}>
                 {GENERAL_INFO.lastName}
               </span>
             </span>
@@ -70,14 +70,14 @@ export default function Hero() {
             </div>
             <div className="mt-6 lg:col-span-5 lg:mt-0">
               <p
-                className="fade-up max-w-[56ch] text-base text-muted md:text-lg"
-                style={{ animationDelay: '700ms' }}
+                className="rise max-w-[56ch] text-base text-muted md:text-lg"
+                style={{ animationDelay: '280ms' }}
               >
                 {GENERAL_INFO.heroLead}
               </p>
               <div
-                className="fade-up mt-6 flex flex-wrap items-center gap-3"
-                style={{ animationDelay: '850ms' }}
+                className="rise mt-6 flex flex-wrap items-center gap-3"
+                style={{ animationDelay: '360ms' }}
               >
                 <a
                   href="#systems"

@@ -48,7 +48,7 @@ export default function SystemPage() {
             <span aria-hidden="true">←&nbsp;</span>All systems
           </Link>
           <p className="label mt-6">{system.id} · CASE STUDY</p>
-          <h1 className="mt-4 max-w-5xl text-balance font-display text-[clamp(2.5rem,8vw,6.5rem)] font-normal leading-[0.95] text-ink">
+          <h1 className="mt-4 max-w-5xl text-balance break-words hyphens-auto font-display text-[clamp(1.75rem,6.5vw,5.5rem)] font-extrabold leading-[1] text-ink">
             {system.title}
           </h1>
           <p className="mt-6 max-w-[60ch] text-lg text-ink">{system.summary}</p>

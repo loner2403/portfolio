@@ -129,7 +129,7 @@ export default function ProjectPage() {
 
           <p className="label mt-6">PROJECT · {project.year}</p>
 
-          <h1 className="mt-4 max-w-5xl text-balance font-display text-[clamp(2.5rem,8vw,6.5rem)] font-normal leading-[0.95] text-ink">
+          <h1 className="mt-4 max-w-5xl text-balance break-words hyphens-auto font-display text-[clamp(1.75rem,6.5vw,5.5rem)] font-extrabold leading-[1] text-ink">
             {project.title}
           </h1>
 

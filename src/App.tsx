@@ -4,7 +4,6 @@ import { AnimatePresence, m, useReducedMotion } from 'motion/react'
 import { Analytics } from '@vercel/analytics/react'
 import SiteHeader from '@/components/layout/SiteHeader'
 import SiteFooter from '@/components/layout/SiteFooter'
-import CommandPalette from '@/components/CommandPalette'
 import MotionLayer from '@/motion/MotionLayer'
 import { refreshScenes, scrollToTop } from '@/motion/bus'
 import { cn } from '@/lib/utils'
@@ -14,6 +13,7 @@ import NotFound from '@/pages/NotFound'
 const ProjectPage = lazy(() => import('@/pages/ProjectPage'))
 const SystemPage = lazy(() => import('@/pages/SystemPage'))
 const AskBot = lazy(() => import('@/components/ask/AskBot'))
+const CommandPalette = lazy(() => import('@/components/CommandPalette'))
 
 const SCROLL_KEY = 'scroll:'
 
@@ -100,6 +100,34 @@ function RouteReady() {
   }, [])
 
   return null
+}
+
+function LazyPalette() {
+  const [wanted, setWanted] = useState(false)
+
+  useEffect(() => {
+    if (wanted) return
+    const onKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault()
+        setWanted(true)
+      }
+    }
+    const onOpen = () => setWanted(true)
+    window.addEventListener('keydown', onKeyDown)
+    window.addEventListener('open-command-palette', onOpen)
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      window.removeEventListener('open-command-palette', onOpen)
+    }
+  }, [wanted])
+
+  if (!wanted) return null
+  return (
+    <Suspense fallback={null}>
+      <CommandPalette initialOpen />
+    </Suspense>
+  )
 }
 
 function App() {
@@ -195,7 +223,7 @@ function App() {
         </m.main>
       </AnimatePresence>
       <SiteFooter />
-      <CommandPalette />
+      <LazyPalette />
       <Suspense fallback={null}>
         <AskBot />
       </Suspense>

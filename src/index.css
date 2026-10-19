@@ -1,5 +1,32 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Archivo Expanded";
+  src: url("./assets/fonts/archivo-expanded-800-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Archivo Expanded Fallback";
+  src: local("Arial Bold"), local("Arial-BoldMT"), local("Arial");
+  font-weight: 100 900;
+  size-adjust: 129.3%;
+  ascent-override: 67.9%;
+  descent-override: 16.2%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Space Grotesk Fallback";
+  src: local("Arial"), local("ArialMT");
+  size-adjust: 110.3%;
+  ascent-override: 89.2%;
+  descent-override: 26.5%;
+  line-gap-override: 0%;
+}
+
 @theme static {
   --color-bg: #0B0B0B;
   --color-panel: #141414;
@@ -15,9 +42,9 @@
   --color-card-2: #EDE8DD;
   --color-card-3: #A8BDFF;
 
-  --font-sans: "Space Grotesk Variable", system-ui, sans-serif;
+  --font-sans: "Space Grotesk Variable", "Space Grotesk Fallback", system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
-  --font-display: "Instrument Serif", Georgia, serif;
+  --font-display: "Archivo Expanded", "Archivo Expanded Fallback", system-ui, sans-serif;
 }
 
 @layer base {
@@ -407,7 +434,7 @@
 }
 
 .block-in {
-  animation: block-in 500ms cubic-bezier(.22, 1, .36, 1) 900ms both;
+  animation: block-in 500ms cubic-bezier(.22, 1, .36, 1) 450ms both;
 }
 
 .word-mask {
@@ -421,17 +448,31 @@
 .word {
   display: inline-block;
   transform: translateY(110%);
-  animation: word-up 800ms cubic-bezier(.22, 1, .36, 1) forwards;
-  animation-delay: calc(var(--i) * 70ms + 100ms);
+  animation: word-up 650ms cubic-bezier(.22, 1, .36, 1) forwards;
+  animation-delay: calc(var(--i) * 28ms + 180ms);
 }
 
 .fade-up {
   animation: fade-up 700ms cubic-bezier(.22, 1, .36, 1) both;
 }
 
+@keyframes rise {
+  from {
+    transform: translateY(14px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.rise {
+  animation: rise 650ms cubic-bezier(.22, 1, .36, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .word,
   .fade-up,
+  .rise,
   .sheet-in,
   .grid-in,
   .ruler-in,
@@ -702,7 +743,7 @@ html[data-motion='paused'] :is(.packet-walk, .node-ring, .frame-bar, .probe-blin
 .line-up {
   display: block;
   transform: translateY(105%);
-  animation: line-up 900ms cubic-bezier(.22, 1, .36, 1) forwards;
+  animation: line-up 750ms cubic-bezier(.22, 1, .36, 1) forwards;
 }
 
 @keyframes line-up {

@@ -178,7 +178,7 @@ export const SYSTEMS: SystemType[] = [
                 { value: '~3,000', label: 'listed companies covered', note: 'across 18 to 19 sectors' },
                 { value: '95 to 98%', label: 'extraction accuracy', note: 'against a hand-checked sample' },
                 { value: '~30 s', label: 'per page', note: 'end-to-end extraction time' },
-                { value: '~Rs 3,000', label: 'per million pages', note: 'extraction cost' },
+                { value: '~$35', label: 'per million pages', note: 'extraction cost' },
             ],
         },
     },
@@ -229,7 +229,7 @@ export const SYSTEMS: SystemType[] = [
         caseStudy: {
             period: 'Bull AI · Sep 2025 to now',
             role: 'Software Engineer, AI & Data Platforms',
-            tldr: 'The streaming backend of a financial copilot that answers company questions from documents and data, used by about 9,000 active users.',
+            tldr: 'The streaming backend of a financial copilot that answers company questions from documents and data, used by 9K+ active users.',
             problem: 'Visitors to the company website wanted quick answers about Indian companies (what a company does, how its numbers look, what its documents say) in a chat, not in a research report.',
             built: [
                 'The backend of an India-focused financial copilot: company lookup, financial snapshots, document Q&A and chart-ready answers.',
@@ -242,7 +242,7 @@ export const SYSTEMS: SystemType[] = [
                 { title: 'Answer in structure', body: 'Responses can carry chart-ready data, so the front end draws a chart instead of describing numbers in prose.' },
                 { title: 'Ground in documents', body: 'Document questions are answered from retrieved passages, not from the model\'s memory.' },
             ],
-            results: [{ value: '~9,000', label: 'active users', note: 'through the company website chatbot' }],
+            results: [{ value: '9K+', label: 'active users', note: 'through the company website chatbot' }],
         },
     },
     {
@@ -493,6 +493,6 @@ export const COLOPHON: { label: string; value: string }[] = [
     { label: 'Framework', value: 'React 19 + Vite' },
     { label: 'Styling', value: 'Tailwind CSS v4' },
     { label: 'Animation', value: 'Motion + GSAP' },
-    { label: 'Type', value: 'Space Grotesk, Instrument Serif, JetBrains Mono' },
+    { label: 'Type', value: 'Space Grotesk, Archivo, JetBrains Mono' },
     { label: 'Hosting', value: 'Vercel' },
 ];
