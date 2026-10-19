@@ -25,7 +25,7 @@ function ScrollManager() {
   return null
 }
 
-function RouteLine() {
+function RouteWipe() {
   const { pathname } = useLocation()
   const reduced = useReducedMotion()
   const first = useRef(true)
@@ -45,15 +45,15 @@ function RouteLine() {
     <m.div
       key={run}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-x-0 top-16 z-[60] h-0.5 origin-left bg-signal"
-      initial={{ scaleX: 0, opacity: 1 }}
+      className="pointer-events-none fixed inset-0 z-[65] bg-signal"
+      initial={{ clipPath: 'inset(0 100% 0 0)' }}
       animate={{
-        scaleX: 1,
-        opacity: 0,
-        transition: {
-          scaleX: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
-          opacity: { delay: 0.35, duration: 0.2, ease: 'linear' },
-        },
+        clipPath: [
+          'inset(0 100% 0 0)',
+          'inset(0 0% 0 0)',
+          'inset(0 0% 0 100%)',
+        ],
+        transition: { duration: 0.7, times: [0, 0.45, 1], ease: [0.76, 0, 0.24, 1] },
       }}
     />
   )
@@ -93,13 +93,17 @@ function App() {
         exit: { opacity: 0, transition: { duration: 0.1, ease: 'linear' as const } },
       }
 
+  useEffect(() => {
+    document.documentElement.dataset.hydrated = '1'
+  }, [])
+
   return (
     <>
       <a href="#main" className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:left-4 focus-visible:top-4 focus-visible:z-[70] focus-visible:border focus-visible:border-signal focus-visible:bg-bg focus-visible:px-3 focus-visible:py-2 focus-visible:font-mono focus-visible:text-sm focus-visible:text-ink">Skip to content</a>
       <ScrollManager />
       <MotionLayer />
       <SiteHeader />
-      <RouteLine />
+      <RouteWipe />
       <AnimatePresence
         mode="wait"
         initial={false}

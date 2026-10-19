@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { CONTACT_FACTS, GENERAL_INFO, SOCIAL_LINKS } from '@/lib/data'
 import Section from '@/components/layout/Section'
 
+const LINK = 'inline-flex min-h-11 items-center font-mono text-sm text-ink underline underline-offset-4'
+
 function useCopyEmail(email: string) {
   const [label, setLabel] = useState('Copy')
   const timer = useRef<number | undefined>(undefined)
@@ -42,72 +44,61 @@ export default function Contact() {
       index="05"
       label="CONTACT"
       title="Building something with agents or data? Let's talk."
+      tone="signal"
       last
     >
-      <div
-        data-reveal
-        className="mt-10 grid grid-cols-1 gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-4"
-      >
-        {facts.map((fact) => (
-          <div key={fact.label} className="bg-bg p-5">
-            <span className="label">{fact.label}</span>
-            <p className="mt-2 font-mono text-sm text-ink">{fact.value}</p>
-          </div>
-        ))}
+      <div data-reveal className="mt-10">
+        <div className="grid gap-6 border-t border-line pt-6 sm:grid-cols-2 lg:grid-cols-4">
+          {facts.map((fact) => (
+            <div key={fact.label}>
+              <span className="label">{fact.label}</span>
+              <p className="mt-2 font-mono text-sm text-ink">{fact.value}</p>
+            </div>
+          ))}
+        </div>
 
-        <div className="col-span-full flex flex-col items-start gap-4 bg-bg p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-10 flex flex-col items-start gap-6 border-t border-line pt-8 lg:flex-row lg:items-end lg:justify-between">
           <div className="min-w-0">
             <span className="label">EMAIL</span>
-            <div className="mt-2">
-              <a
-                href={mailto}
-                className="relative inline-block break-all font-mono text-[clamp(1.4rem,3.5vw,2.5rem)] text-ink transition-colors hover:text-signal"
-              >
-                {GENERAL_INFO.email}
-                <span
-                  data-underline
-                  aria-hidden="true"
-                  className="absolute inset-x-0 -bottom-1 h-px origin-left bg-faint"
-                />
-              </a>
-            </div>
+            <a
+              href={mailto}
+              className="mt-2 block break-all font-mono text-[clamp(1.25rem,4vw,3rem)] text-ink underline decoration-1 underline-offset-[6px]"
+            >
+              {GENERAL_INFO.email}
+            </a>
           </div>
-          <div className="flex shrink-0 items-center gap-4">
+          <div className="flex shrink-0 flex-col items-start gap-2">
             <button
               type="button"
               data-testid="copy-email"
               data-magnetic
               onClick={copy}
-              className="inline-flex items-center gap-2 border border-line px-4 py-2 font-mono text-sm text-ink transition-colors hover:border-signal"
+              className="inline-flex min-h-11 items-center border border-signal-ink px-5 font-mono text-sm text-signal-ink transition-colors hover:bg-signal-ink hover:text-card-1"
             >
               {label}
             </button>
             <span aria-live="polite" className="sr-only">
               {label}
             </span>
+            {label === 'Copy failed' && <span className="text-sm text-ink">Use the email link above</span>}
           </div>
         </div>
 
-        {github && (
-          <a
-            href={github.url}
-            target="_blank"
-            rel="noreferrer"
-            className="bg-bg p-5 font-mono text-sm text-ink transition-colors hover:text-signal lg:col-span-2"
-          >
-            GitHub ↗
+        <div className="mt-8 flex flex-wrap gap-x-8 gap-y-2 border-t border-line pt-6">
+          {github && (
+            <a href={github.url} target="_blank" rel="noopener noreferrer" className={LINK}>
+              GitHub ↗
+            </a>
+          )}
+          {linkedin && (
+            <a href={linkedin.url} target="_blank" rel="noopener noreferrer" className={LINK}>
+              LinkedIn ↗
+            </a>
+          )}
+          <a href={GENERAL_INFO.resumeUrl} target="_blank" rel="noopener noreferrer" className={LINK}>
+            Résumé ↗
           </a>
-        )}
-        {linkedin && (
-          <a
-            href={linkedin.url}
-            target="_blank"
-            rel="noreferrer"
-            className="bg-bg p-5 font-mono text-sm text-ink transition-colors hover:text-signal lg:col-span-2"
-          >
-            LinkedIn ↗
-          </a>
-        )}
+        </div>
       </div>
     </Section>
   )

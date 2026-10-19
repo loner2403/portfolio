@@ -129,7 +129,10 @@ export default function FlowGraph({
   walk?: number[]
   walkStopped?: boolean
 }) {
-  const reduced = useReducedMotion() ?? false
+  const prefersReduced = useReducedMotion() ?? false
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  const reduced = mounted && prefersReduced
   const ref = useRef<HTMLDivElement>(null)
   const seen = useInView(ref, { once: true, amount: 0.3 })
   const live = useInView(ref, { amount: 0.1 })
@@ -204,7 +207,7 @@ export default function FlowGraph({
                 height={group.h}
                 rx={4}
                 fill={lane ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.015)'}
-                stroke={lane ? '#26302A' : '#2F3B34'}
+                stroke={lane ? '#2E2620' : '#3A3128'}
                 strokeWidth={1}
                 strokeDasharray={lane ? undefined : '4 6'}
               />

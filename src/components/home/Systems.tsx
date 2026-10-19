@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import { SYSTEMS } from '@/lib/data'
 import Section from '@/components/layout/Section'
 import Principles from '@/components/home/Principles'
@@ -11,13 +12,23 @@ export default function Systems() {
         Illustrative architectures from my AI and data platform work. Names and details are generalised.
       </p>
 
-      <div className="mt-12 border-t border-line">
+      <div className="mt-12">
         {SYSTEMS.map((system, index) => (
           <article
             key={system.id}
             id={`system-${system.id}`}
             data-testid="system-card"
-            className="group grid gap-8 border-b border-line py-12 md:py-16 lg:grid-cols-12 lg:items-center lg:gap-12"
+            className={cn(
+              'stack-card relative mb-6 rounded-sm border p-6 md:p-10 lg:sticky',
+              'group grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-12',
+            )}
+            style={
+              {
+                top: `calc(5rem + ${index * 0.75}rem)`,
+                '--card': `var(--color-card-${(index % 3) + 1})`,
+                zIndex: index + 1,
+              } as CSSProperties
+            }
           >
             <div data-reveal className={cn('min-w-0 lg:col-span-4', index % 2 === 1 && 'lg:order-2')}>
               <span className="label">{system.id}</span>
@@ -28,7 +39,7 @@ export default function Systems() {
               <p className="mt-6 font-mono text-xs text-faint">{system.stack.join(' · ')}</p>
             </div>
 
-            <div className={cn('min-w-0 lg:col-span-8', index % 2 === 1 && 'lg:order-1')}>
+            <div className={cn('stack-inset min-w-0 lg:col-span-8', index % 2 === 1 && 'lg:order-1')}>
               <SystemArchitecture systemId={system.id} />
             </div>
           </article>

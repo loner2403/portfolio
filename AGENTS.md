@@ -20,6 +20,8 @@ Read this first. Claude-specific routing is in `CLAUDE.md`.
 
 ## Hard rules (from the contract)
 
+The V3.2 addendum at the end of `docs/V3-CONTROL-ROOM.md` supersedes the lime accent and the transform/opacity-only rule below (warm palette, sticky stacked cards, clip-path wipes are allowed).
+
 - One accent: signal lime `#C6FF3D`, used sparingly (primary CTA, live dots, active beam, focus ring, one underline).
 - Banned: particles, preloader, custom cursor, scroll-jacking, aurora/meteor/beam backgrounds, gradient text, glassmorphism.
 - Hero trace footer must read `simulated trace · illustrative timings`.

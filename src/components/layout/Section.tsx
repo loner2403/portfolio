@@ -11,6 +11,7 @@ export default function Section({
   children,
   className,
   last,
+  tone = 'default',
 }: {
   id: string
   index: string
@@ -19,9 +20,18 @@ export default function Section({
   children: ReactNode
   className?: string
   last?: boolean
+  tone?: 'default' | 'signal'
 }) {
+  const signal = tone === 'signal'
   return (
-    <section id={id} className={cn('relative border-t border-line py-24 md:py-32', className)}>
+    <section
+      id={id}
+      className={cn(
+        'relative py-24 md:py-32',
+        signal ? 'tone-ink border-transparent bg-card-1' : 'border-t border-line',
+        className,
+      )}
+    >
       <Rail marker last={last} />
       <Container>
         <div data-reveal className="flex items-center gap-4">
@@ -32,12 +42,18 @@ export default function Section({
             <span data-hairline className="absolute inset-0 origin-left bg-faint" />
           </span>
         </div>
-        <h2
-          data-split
-          className="mt-6 text-[clamp(2rem,4vw,3.25rem)] font-medium leading-[1.05] tracking-[-0.03em] text-ink"
-        >
-          {title}
-        </h2>
+        {signal ? (
+          <h2 className="mt-6 pb-[0.1em] font-display text-[clamp(2.5rem,6vw,5.5rem)] font-normal leading-[1.05] tracking-[-0.01em] text-ink">
+            {title}
+          </h2>
+        ) : (
+          <h2
+            data-split
+            className="mt-6 text-[clamp(2rem,4vw,3.25rem)] font-medium leading-[1.05] tracking-[-0.03em] text-ink"
+          >
+            {title}
+          </h2>
+        )}
         {children}
       </Container>
     </section>

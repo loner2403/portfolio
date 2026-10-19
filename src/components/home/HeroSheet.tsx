@@ -28,7 +28,10 @@ export default function HeroSheet({
   activeId?: string | null
   onActiveChange?: (id: string | null) => void
 }) {
-  const reduced = useReducedMotion() ?? false
+  const prefersReduced = useReducedMotion() ?? false
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  const reduced = mounted && prefersReduced
   const isCompact = useIsCompact()
   const [hovered, setHovered] = useState<string | null>(null)
   const [stopped, setStopped] = useState(false)

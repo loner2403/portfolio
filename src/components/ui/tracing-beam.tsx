@@ -2,8 +2,8 @@ import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import { m, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react'
 import { cn } from '@/lib/utils'
 
-const GRADIENT_START = '#C6FF3D'
-const GRADIENT_STOP = '#4FB8A8'
+const GRADIENT_START = '#FFE899'
+const GRADIENT_STOP = '#FFCE94'
 const TRACK_COLOR = '#2F3A33'
 
 export const TracingBeam = ({

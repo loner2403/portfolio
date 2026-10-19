@@ -1,19 +1,23 @@
 @import "tailwindcss";
 
-@theme {
-  --color-bg: #0E1210;
-  --color-panel: #141916;
-  --color-panel-2: #1A201C;
-  --color-line: #26302A;
-  --color-ink: #EDE9DF;
-  --color-muted: #8E968F;
-  --color-faint: #7E867F;
-  --color-signal: #C6FF3D;
-  --color-signal-ink: #0E1210;
-  --color-teal: #4FB8A8;
+@theme static {
+  --color-bg: #14110F;
+  --color-panel: #1B1714;
+  --color-panel-2: #231E19;
+  --color-line: #2E2620;
+  --color-ink: #F3EBDD;
+  --color-muted: #A39683;
+  --color-faint: #8F8372;
+  --color-signal: #FFE899;
+  --color-signal-ink: #14110F;
+  --color-teal: #FFCE94;
+  --color-card-1: #FFE899;
+  --color-card-2: #FFCE94;
+  --color-card-3: #FF8A65;
 
   --font-sans: "Space Grotesk Variable", system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+  --font-display: "Instrument Serif", Georgia, serif;
 }
 
 @layer base {
@@ -187,7 +191,7 @@
 
 .flow-dash {
   fill: none;
-  stroke: rgba(198, 255, 61, 0.38);
+  stroke: rgba(255, 232, 153, 0.38);
   stroke-width: 1.75;
   stroke-linecap: round;
   stroke-dasharray: 2 11;
@@ -196,12 +200,12 @@
 
 .edge-flow-solid {
   fill: none;
-  stroke: rgba(198, 255, 61, 0.28);
+  stroke: rgba(255, 232, 153, 0.28);
   stroke-width: 1.5;
 }
 
 .group:hover .flow-dash {
-  stroke: rgba(198, 255, 61, 0.7);
+  stroke: rgba(255, 232, 153, 0.7);
 }
 
 .packet {
@@ -439,8 +443,9 @@
 }
 
 html.motion-ready [data-reveal]:not(.is-in) {
-  opacity: 0;
-  transform: translateY(14px);
+  opacity: 1;
+  transform: translateY(12px);
+  clip-path: inset(0 0 100% 0);
 }
 
 .scroll-progress {
@@ -649,5 +654,111 @@ html[data-motion='paused'] :is(.packet-walk, .node-ring, .frame-bar, .probe-blin
   .frame-bar {
     animation: none;
     transform: scaleX(1);
+  }
+}
+
+.stack-card {
+  background: var(--card);
+  border-color: transparent;
+  color: #14110F;
+  --color-ink: #14110F;
+  --color-muted: #2E261F;
+  --color-faint: #3A3128;
+  --color-line: rgba(20, 17, 15, 0.28);
+  --color-signal: #14110F;
+}
+
+.stack-card .stack-inset {
+  background: #14110F;
+  border-radius: 2px;
+  padding: 1rem;
+  color: #F3EBDD;
+  --color-ink: #F3EBDD;
+  --color-muted: #A39683;
+  --color-faint: #8F8372;
+  --color-line: #2E2620;
+  --color-signal: #FFE899;
+}
+
+.tone-ink {
+  --color-ink: #14110F;
+  --color-muted: #2E261F;
+  --color-faint: #3A3128;
+  --color-line: rgba(20, 17, 15, 0.28);
+}
+
+.tone-ink :focus-visible,
+.tone-ink:focus-visible {
+  outline-color: #14110F;
+}
+
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+
+.line-up {
+  display: block;
+  transform: translateY(105%);
+  animation: line-up 900ms cubic-bezier(.22, 1, .36, 1) forwards;
+}
+
+@keyframes line-up {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.work-row > [data-work-fill] {
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 450ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.work-row .work-text {
+  transition: color 250ms ease-out, transform 300ms cubic-bezier(.22, 1, .36, 1);
+}
+
+@media (hover: hover) {
+  .work-row:hover > [data-work-fill] {
+    clip-path: inset(0);
+  }
+
+  .work-row:hover .work-text {
+    color: #14110F;
+  }
+
+  .work-row:hover .work-live {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.work-row:focus-visible > [data-work-fill] {
+  clip-path: inset(0);
+}
+
+.work-row:focus-visible .work-text {
+  color: #14110F;
+}
+
+.work-row:focus-visible .work-live {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line-up {
+    animation: none;
+    transform: none;
+  }
+
+  .work-row > [data-work-fill],
+  .work-row .work-text {
+    transition: none;
   }
 }

@@ -120,3 +120,12 @@ Actions (Copy email, Open résumé, GitHub, LinkedIn). Mono, panel background, s
 Magic UI (AnimatedBeam, NumberTicker), React Bits (DotGrid, SpotlightCard), Motion Primitives (optional TextMorph), Aceternity (TracingBeam only).
 Installed as source via the shadcn CLI into `src/components/ui/`, adapted for Vite (no `next/*`). Animation runtime: `motion` (`motion/react`).
 Not used: Aceternity backgrounds, Meteors, Aurora, particle/ballpit/WebGL backgrounds, globe.
+
+## V3.2 addendum - "Stacked" (owner-approved 2026-10-18, supersedes conflicting text above)
+
+Source: REA captures of jlern.com, pilato.it, kyoosangchoi.com, eemonroy.com, estherwong.fun.
+- Palette A "Warm": base #14110F, signal #FFE899, cards #FFE899 / #FFCE94 / #FF8A65. Lime is retired.
+- Systems articles become sticky stacked cards from lg up: each card sticks slightly lower than the previous and the next slides over it, with a coloured top rule from card-1..3.
+- Reveals use a clip-path inset wipe (power3.out, staggered) instead of a plain fade.
+- Route changes add a full-viewport clip-path wipe in the signal colour. Reduced motion and the first load skip it.
+- Relaxed for this pass: sticky stacking and clip-path animation are allowed, and the transform/opacity-only rule does not apply to clip-path. Still banned: custom cursor, particles, preloader, WebGL, gradient text, pill buttons.

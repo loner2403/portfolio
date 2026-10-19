@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import parse from 'html-react-parser'
 import { PROJECTS, type ProjectType } from '@/lib/data'
+import { cardVar } from '@/lib/cards'
 import { IMAGE_SIZES } from '@/lib/image-sizes'
 import { SITE_DESCRIPTION, truncate, useDocumentMeta } from '@/lib/seo'
 import Container from '@/components/layout/Container'
@@ -38,26 +39,46 @@ function Description({ description }: { description: string }) {
   return <div className="project-prose mt-8">{content}</div>
 }
 
-function Gallery({ project }: { project: ProjectType }) {
+function Visual({ project }: { project: ProjectType }) {
   const images = project.images.filter(Boolean)
-  const galleryImages = images.length > 0 ? images : project.longThumbnail ? [project.longThumbnail] : []
-
-  if (galleryImages.length === 0) return null
+  const sources =
+    images.length > 0
+      ? images
+      : project.longThumbnail
+        ? [project.longThumbnail]
+        : project.thumbnail
+          ? [project.thumbnail]
+          : []
 
   return (
-    <div className="mt-12 grid gap-4 sm:grid-cols-2">
-      {galleryImages.map((src, index) => (
-        <img
-          key={`${src}-${index}`}
-          src={src}
-          alt={`${project.title} screenshot ${index + 1}`}
-          width={IMAGE_SIZES[src]?.w}
-          height={IMAGE_SIZES[src]?.h}
-          loading="lazy"
-          decoding="async"
-          className="h-auto w-full rounded-sm border border-line object-cover"
-        />
-      ))}
+    <div data-testid="project-visual" className="mt-12">
+      {sources.length > 0 ? (
+        <div className="grid gap-4 sm:grid-cols-2">
+          {sources.map((src, index) => (
+            <img
+              key={`${src}-${index}`}
+              src={src}
+              alt={`${project.title} screenshot ${index + 1}`}
+              width={IMAGE_SIZES[src]?.w}
+              height={IMAGE_SIZES[src]?.h}
+              loading="lazy"
+              decoding="async"
+              className="aspect-[16/10] h-auto w-full rounded-sm border border-line object-cover"
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="border border-line p-8">
+          <span className="label">BUILT WITH</span>
+          <ul className="mt-4 space-y-1">
+            {project.techStack.map((tech) => (
+              <li key={tech} className="font-mono text-[clamp(1.25rem,3vw,2rem)] text-ink">
+                {tech}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   )
 }
@@ -91,48 +112,45 @@ export default function ProjectPage() {
   const nextProject = PROJECTS[(currentIndex + 1) % PROJECTS.length]
 
   return (
-    <article data-testid="project-detail" className="pb-24 pt-12 md:pb-32 md:pt-24">
+    <article data-testid="project-detail" className="pb-24 md:pb-32">
+      <header
+        data-testid="project-header"
+        className="tone-ink py-14 md:py-24"
+        style={{ background: cardVar(currentIndex) }}
+      >
+        <Container>
+          <Link
+            to="/#work"
+            className="inline-flex min-h-11 items-center font-mono text-sm text-ink underline-offset-4 hover:underline"
+          >
+            ← all work
+          </Link>
+
+          <p className="label mt-6">PROJECT · {project.year}</p>
+
+          <h1 className="mt-4 max-w-5xl text-balance font-display text-[clamp(2.5rem,8vw,6.5rem)] font-normal leading-[0.95] text-ink">
+            {project.title}
+          </h1>
+
+          {project.role && (
+            <div className="mt-6 max-w-3xl text-ink">
+              {project.role.includes('<') ? parse(project.role) : project.role}
+            </div>
+          )}
+        </Container>
+      </header>
+
       <Container>
-        <Link
-          to="/#work"
-          className="font-mono text-sm text-muted transition-colors hover:text-ink"
-        >
-          ← all work
-        </Link>
+        <p className="mt-10 font-mono text-sm text-muted">{project.techStack.join(', ')}</p>
 
-        <p className="mt-8 font-mono text-xs uppercase tracking-[0.08em] text-faint">
-          PROJECT · {project.year}
-        </p>
-
-        <h1 className="mt-4 max-w-4xl text-[clamp(2.6rem,6vw,5.5rem)] font-medium leading-[.95] tracking-[-0.035em] text-ink">
-          {project.title}
-        </h1>
-
-        {project.role && (
-          <div className="project-prose mt-6 max-w-3xl text-muted">
-            {project.role.includes('<') ? parse(project.role) : project.role}
-          </div>
-        )}
-
-        <div className="mt-6 flex flex-wrap gap-2">
-          {project.techStack.map((tech) => (
-            <span
-              key={tech}
-              className="rounded-sm border border-line px-2.5 py-1 font-mono text-xs text-muted"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-
-        {(project.liveUrl || project.sourceCode) && (
-          <div className="mt-8 flex flex-wrap items-center gap-3">
+        {project.liveUrl || project.sourceCode ? (
+          <div className="mt-6 flex flex-wrap items-center gap-3">
             {project.liveUrl && (
               <a
                 href={project.liveUrl}
                 target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-sm bg-signal px-5 py-2.5 font-mono text-sm font-medium text-signal-ink transition-colors hover:bg-signal/90"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center gap-2 rounded-sm bg-signal px-5 py-2.5 font-mono text-sm font-medium text-signal-ink transition-colors hover:bg-signal/90"
               >
                 Live ↗
               </a>
@@ -141,17 +159,19 @@ export default function ProjectPage() {
               <a
                 href={project.sourceCode}
                 target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-sm border border-line px-5 py-2.5 font-mono text-sm text-ink transition-colors hover:border-signal"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center gap-2 rounded-sm border border-line px-5 py-2.5 font-mono text-sm text-ink transition-colors hover:border-signal"
               >
                 Source ↗
               </a>
             )}
           </div>
+        ) : (
+          <p className="mt-6 font-mono text-sm text-muted">Private codebase, not public</p>
         )}
 
         <Description description={project.description} />
-        <Gallery project={project} />
+        <Visual project={project} />
 
         <div className="mt-16 border-t border-line pt-6">
           <Link

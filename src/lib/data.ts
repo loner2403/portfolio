@@ -306,3 +306,11 @@ export const MY_EXPERIENCE: ExperienceType[] = [
         skills: ['Spring Boot', 'React.js', 'Camunda', 'Git', 'Agile'],
     },
 ];
+
+export const COLOPHON: { label: string; value: string }[] = [
+    { label: 'Framework', value: 'React 19 + Vite' },
+    { label: 'Styling', value: 'Tailwind CSS v4' },
+    { label: 'Animation', value: 'Motion + GSAP' },
+    { label: 'Type', value: 'Space Grotesk, Instrument Serif, JetBrains Mono' },
+    { label: 'Hosting', value: 'Vercel' },
+];

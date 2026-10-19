@@ -35,9 +35,9 @@ function mountScenes(): () => void {
         once: true,
         onEnter: (batch) =>
           gsap.to(batch, {
-            opacity: 1,
+            clipPath: 'inset(0 0 0% 0)',
             y: 0,
-            duration: 0.7,
+            duration: 0.8,
             ease: 'power3.out',
             stagger: 0.08,
             overwrite: true,
@@ -45,7 +45,7 @@ function mountScenes(): () => void {
               batch.forEach((el) => {
                 const node = el as HTMLElement
                 node.classList.add('is-in')
-                gsap.set(node, { clearProps: 'opacity,transform' })
+                gsap.set(node, { clearProps: 'clipPath,opacity,transform' })
               }),
           }),
       })
@@ -130,7 +130,7 @@ function mountScenes(): () => void {
         document.documentElement.classList.remove('motion-ready')
         stranded.forEach((el) => {
           el.classList.add('is-in')
-          gsap.set(el, { clearProps: 'opacity,transform' })
+          gsap.set(el, { clearProps: 'clipPath,opacity,transform' })
         })
       }, 6000)
 
@@ -238,6 +238,29 @@ function mountScenes(): () => void {
         return () => {
           cleanups.forEach((fn) => fn())
         }
+      },
+    )
+
+    mm.add(
+      '(prefers-reduced-motion: no-preference) and (min-width: 1024px)',
+      () => {
+        const cards = gsap.utils.toArray<HTMLElement>('.stack-card')
+        gsap.set(cards, { transformOrigin: '50% 0%' })
+        cards.forEach((card, index) => {
+          const next = cards[index + 1]
+          if (!next) return
+          gsap.to(card, {
+            scale: 0.9 + index * 0.02,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: next,
+              start: 'top 85%',
+              end: 'top 25%',
+              scrub: 0.3,
+              invalidateOnRefresh: true,
+            },
+          })
+        })
       },
     )
   } catch (error) {

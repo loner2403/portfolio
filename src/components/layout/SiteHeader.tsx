@@ -111,7 +111,7 @@ export default function SiteHeader() {
               type="button"
               data-testid="cmdk-trigger"
               onClick={openPalette}
-              className="shrink-0 whitespace-nowrap rounded-sm border border-line px-2.5 py-1 font-mono text-xs text-muted transition-colors hover:border-signal hover:text-ink"
+              className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center whitespace-nowrap rounded-sm border border-line px-2.5 py-1 font-mono text-xs text-muted transition-colors hover:border-signal hover:text-ink"
             >
               {isMac ? '⌘K' : 'Ctrl K'}
             </button>
@@ -121,7 +121,7 @@ export default function SiteHeader() {
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
               onClick={() => setMenuOpen((open) => !open)}
-              className="rounded-sm border border-line px-2.5 py-1 font-mono text-xs text-muted transition-colors hover:border-signal hover:text-ink md:hidden"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm border border-line px-2.5 py-1 font-mono text-xs text-muted transition-colors hover:border-signal hover:text-ink md:hidden"
             >
               Menu
             </button>

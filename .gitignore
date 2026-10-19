@@ -36,3 +36,7 @@ video/out
 
 # personal résumé (phone/email): keep out of the public repo
 public/My_Resume.pdf
+
+# Playwright
+test-results
+playwright-report

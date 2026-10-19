@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { LazyMotion, MotionConfig, domAnimation } from 'motion/react'
 import '@fontsource-variable/space-grotesk'
 import '@fontsource-variable/jetbrains-mono'
+import '@fontsource/instrument-serif'
 import './index.css'
 import App from './App.tsx'
 import { applyMotionPref, readMotionPref } from '@/lib/motion-pref'
@@ -33,3 +34,10 @@ const element = (
 
 if (root.hasChildNodes()) hydrateRoot(root, element)
 else createRoot(root).render(element)
+
+if (typeof window !== 'undefined') {
+  console.log(
+    '%cOh hello, fellow nosy developer. The probe lives at /api/ask. Try Ctrl K.',
+    'color: #FFE899',
+  )
+}
