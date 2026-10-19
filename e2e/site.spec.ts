@@ -25,7 +25,7 @@ function watchErrors(page: Page): string[] {
 }
 
 async function gotoReady(page: Page, path = '/') {
-  await page.goto(path.startsWith('/projects/') && !path.endsWith('/') ? `${path}/` : path)
+  await page.goto((path.startsWith('/projects/') || path.startsWith('/systems/')) && !path.endsWith('/') ? `${path}/` : path)
   await page.waitForFunction(() => document.documentElement.dataset.hydrated === '1')
 }
 
@@ -397,6 +397,111 @@ test.describe('V3.4 sections', () => {
     await page.locator('#system-S-03').scrollIntoViewIfNeeded()
     await expect.poll(() => dimOf('S-01'), { timeout: 5000 }).toBeGreaterThan(0.25)
     expect(await dimOf(SYSTEMS[SYSTEMS.length - 1].id)).toBe(0)
+  })
+})
+
+test.describe('system case studies', () => {
+  test('every system card opens its case study with a matching colour header', async ({ page }) => {
+    for (const system of SYSTEMS) {
+      await gotoReady(page)
+      const card = page.locator(`#system-${system.id}`)
+      const cardBg = await card.evaluate((el) => getComputedStyle(el).backgroundColor)
+      const link = card.getByTestId('case-link')
+      await expect(link).toHaveAttribute('href', `/systems/${system.slug}`)
+      await link.focus()
+      await page.keyboard.press('Enter')
+      await expect(page).toHaveURL(new RegExp(`/systems/${system.slug}$`))
+      await expect(page.getByTestId('system-case')).toBeVisible()
+      await expect(page.locator('main h1')).toHaveText(system.title)
+      const bg = await page.getByTestId('case-header').evaluate((el) => getComputedStyle(el).backgroundColor)
+      expect(bg, system.id).toBe(cardBg)
+    }
+  })
+
+  test('case pages render every section from the data and only real results', async ({ page }) => {
+    for (const system of SYSTEMS) {
+      const study = system.caseStudy
+      await gotoReady(page, `/systems/${system.slug}`)
+      await expect(page.getByTestId('case-problem')).toContainText(study.problem)
+      await expect(page.getByTestId('case-built').locator('li')).toHaveCount(study.built.length)
+      await expect(page.getByTestId('case-decision')).toHaveCount(study.decisions.length)
+      if (study.results.length > 0) {
+        const results = page.getByTestId('case-result')
+        await expect(results).toHaveCount(study.results.length)
+        for (const result of study.results) await expect(page.getByTestId('case-results')).toContainText(result.value)
+      } else {
+        await expect(page.getByTestId('case-results')).toHaveCount(0)
+      }
+      await expect(page.getByTestId('case-architecture')).toHaveCount(1)
+    }
+  })
+
+  test('case pages have no errors or overflow at 375px and chain to the next system', async ({ page }) => {
+    const errors = watchErrors(page)
+    await page.setViewportSize({ width: 375, height: 812 })
+    for (const [index, system] of SYSTEMS.entries()) {
+      await gotoReady(page, `/systems/${system.slug}`)
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      )
+      expect(overflow, system.id).toBeLessThanOrEqual(0)
+      const next = SYSTEMS[(index + 1) % SYSTEMS.length]
+      await expect(page.getByTestId('case-next')).toHaveAttribute('href', `/systems/${next.slug}`)
+    }
+    expect(errors).toEqual([])
+  })
+
+  test('results rows never leave empty cells', async ({ page }) => {
+    for (const viewport of [{ width: 375, height: 812 }, { width: 1440, height: 900 }]) {
+      await page.setViewportSize(viewport)
+      for (const system of SYSTEMS.filter((s) => s.caseStudy.results.length > 0)) {
+        await gotoReady(page, `/systems/${system.slug}`)
+        const gap = await page.getByTestId('case-results').evaluate((grid) => {
+          const box = grid.getBoundingClientRect()
+          const cells = Array.from(grid.children).map((c) => c.getBoundingClientRect())
+          const lastRowTop = Math.max(...cells.map((c) => c.top))
+          const lastRow = cells.filter((c) => Math.abs(c.top - lastRowTop) < 2)
+          const used = lastRow.reduce((sum, c) => sum + c.width, 0)
+          return box.width - used - (lastRow.length - 1) * 1
+        })
+        expect(gap, `${system.id} at ${viewport.width}`).toBeLessThanOrEqual(4)
+      }
+    }
+  })
+
+  test('case footer arrows are separated from their labels', async ({ page }) => {
+    await gotoReady(page, `/systems/${SYSTEMS[0].slug}`)
+    const text = await page.locator('nav[aria-label="More systems"]').innerText()
+    expect(text).not.toMatch(/←\S|\S→/)
+  })
+
+  test('unknown system slug shows the not found view', async ({ page }) => {
+    await gotoReady(page, '/systems/does-not-exist')
+    await expect(page.getByTestId('not-found')).toBeVisible()
+  })
+
+  test('command palette opens a case study', async ({ page }) => {
+    const system = SYSTEMS[1]
+    await gotoReady(page)
+    await page.keyboard.press('Control+k')
+    const palette = page.getByTestId('command-palette')
+    await expect(palette).toBeVisible()
+    await palette.locator('input').fill(system.title)
+    await palette.getByRole('option', { name: system.title }).first().click()
+    await expect(page).toHaveURL(new RegExp(`/systems/${system.slug}$`))
+  })
+})
+
+test.describe('system case studies without javascript', () => {
+  test.use({ javaScriptEnabled: false })
+
+  test('case pages are prerendered', async ({ page }) => {
+    for (const system of SYSTEMS) {
+      await page.goto(`/systems/${system.slug}/`)
+      await expect(page.locator('h1')).toHaveText(system.title)
+      await expect(page).toHaveTitle(`${system.title} | Harshal Lade`)
+      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://harshallade.site/systems/${system.slug}`)
+    }
   })
 })
 

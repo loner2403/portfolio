@@ -2,7 +2,7 @@ import { prerenderToNodeStream } from 'react-dom/static'
 import { StaticRouter } from 'react-router'
 import { LazyMotion, MotionConfig, domAnimation } from 'motion/react'
 import App from './App'
-import { PROJECTS } from '@/lib/data'
+import { PROJECTS, SYSTEMS } from '@/lib/data'
 import { SITE_DESCRIPTION, SITE_TITLE, truncate } from '@/lib/seo'
 
 const SITE_URL = 'https://harshallade.site'
@@ -33,7 +33,11 @@ export async function render(url: string): Promise<string> {
   return readStream(prelude)
 }
 
-export const ROUTES: string[] = ['/', ...PROJECTS.map((project) => `/projects/${project.slug}`)]
+export const ROUTES: string[] = [
+  '/',
+  ...PROJECTS.map((project) => `/projects/${project.slug}`),
+  ...SYSTEMS.map((system) => `/systems/${system.slug}`),
+]
 
 function toPlainText(text: string): string {
   return text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
@@ -47,6 +51,15 @@ export function routeMeta(url: string): { title: string; description: string; ca
       title: SITE_TITLE,
       description: SITE_DESCRIPTION,
       canonical: `${SITE_URL}/`,
+    }
+  }
+
+  const system = SYSTEMS.find((item) => `/systems/${item.slug}` === path)
+  if (system) {
+    return {
+      title: `${system.title} | Harshal Lade`,
+      description: truncate(system.summary, 155),
+      canonical: `${SITE_URL}/systems/${system.slug}`,
     }
   }
 

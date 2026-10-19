@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Command } from 'cmdk'
-import { GENERAL_INFO, NAV_SECTIONS, PROJECTS, SOCIAL_LINKS } from '@/lib/data'
+import { GENERAL_INFO, NAV_SECTIONS, PROJECTS, SOCIAL_LINKS, SYSTEMS } from '@/lib/data'
 import { scrollToTarget } from '@/motion/bus'
 
 const itemClass =
@@ -48,6 +48,11 @@ export default function CommandPalette() {
     navigate(`/projects/${slug}`)
   }
 
+  const openSystem = (slug: string) => {
+    close()
+    navigate(`/systems/${slug}`)
+  }
+
   const copyEmail = () => {
     close()
     if (navigator.clipboard) {
@@ -91,6 +96,20 @@ export default function CommandPalette() {
               className={itemClass}
             >
               <span>Go to {section.label}</span>
+            </Command.Item>
+          ))}
+        </Command.Group>
+
+        <Command.Group heading={<span className={headingClass}>Systems</span>}>
+          {SYSTEMS.map((system) => (
+            <Command.Item
+              key={system.id}
+              value={`System ${system.id} ${system.title}`}
+              onSelect={() => openSystem(system.slug)}
+              className={itemClass}
+            >
+              <span>{system.title}</span>
+              <span className="ml-auto text-xs text-faint">{system.id}</span>
             </Command.Item>
           ))}
         </Command.Group>

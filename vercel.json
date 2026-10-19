@@ -81,7 +81,11 @@
   ],
   "rewrites": [
     {
-      "source": "/projects/:slug(thumbnail-ai|medium-blog-clone|resume-roaster)",
+      "source": "/projects/:slug(vyapardrishti|thumbnail-ai|medium-blog-clone|resume-roaster)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/systems/:slug(research-agent-workflows|document-extraction-pipeline|data-ingestion-services|conversational-assistant|batch-analysis-jobs)",
       "destination": "/index.html"
     }
   ],

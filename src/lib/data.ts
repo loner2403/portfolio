@@ -88,18 +88,30 @@ export const PRINCIPLES: { title: string; line: string; seen: string[] }[] = [
     { title: 'Evaluate before shipping', line: 'Evaluation harnesses decide whether a change is better, not a hunch.', seen: ['S-02'] },
 ];
 
+export interface CaseStudy {
+    period: string;
+    role: string;
+    problem: string;
+    built: string[];
+    decisions: { title: string; body: string }[];
+    results: { value: string; label: string; note: string }[];
+}
+
 export interface SystemType {
     id: string;
+    slug: string;
     title: string;
     summary: string;
     stages?: string[];
     highlights: string[];
     stack: string[];
+    caseStudy: CaseStudy;
 }
 
 export const SYSTEMS: SystemType[] = [
     {
         id: 'S-01',
+        slug: 'research-agent-workflows',
         title: 'Research agent workflows',
         summary: 'Multi-step LLM agent workflows that research a domain, retrieve supporting evidence, validate outputs against schemas and persist every run.',
         stages: ['plan', 'retrieve', 'analyse', 'synthesise', 'validate', 'persist'],
@@ -110,9 +122,28 @@ export const SYSTEMS: SystemType[] = [
             'Persistent run history',
         ],
         stack: ['LangGraph', 'Vector DB', 'PostgreSQL', 'Gemini', 'OpenAI', 'Python'],
+        caseStudy: {
+            period: 'Bull AI · Sep 2025 to now',
+            role: 'Software Engineer, AI & Data Platforms',
+            problem: 'Equity research means reading market data, filings and annual reports for many companies and turning them into analysis people can act on. Doing it by hand does not scale, and a free-form LLM answer cannot be trusted or audited.',
+            built: [
+                'LangGraph workflows for Indian equities covering market analysis, financial projections and annual-report processing.',
+                'Each run plans, retrieves evidence from a document corpus, analyses, synthesises and validates before anything is saved.',
+                'Persistent state and run history, designed so a result can be traced back to the inputs and prompt versions that produced it.',
+                'Clients for several LLM providers behind one interface.',
+            ],
+            decisions: [
+                { title: 'Schema first', body: 'Every model output is parsed against a schema. A run that fails validation is rejected instead of being passed downstream.' },
+                { title: 'Grounded in sources', body: 'Claims are tied to retrieved sources, so an analyst can check where a statement came from.' },
+                { title: 'Benchmark the providers', body: 'Providers are compared on the same tasks, and point-in-time backtesting checks projections against what happened later.' },
+                { title: 'Version the prompts', body: 'Prompts are versioned like code, so a change in output can be tied to a change in prompt.' },
+            ],
+            results: [{ value: '3', label: 'workflow families', note: 'market analysis, projections and annual reports' }],
+        },
     },
     {
         id: 'S-02',
+        slug: 'document-extraction-pipeline',
         title: 'Document extraction pipeline',
         summary: 'Extracts structured data from long documents through an auditable, repeatable multi-stage pipeline.',
         stages: ['retrieve', 'parse', 'discover', 'extract', 'validate'],
@@ -123,9 +154,33 @@ export const SYSTEMS: SystemType[] = [
             'Repeatable runs for auditability',
         ],
         stack: ['Python', 'LangGraph', 'Pydantic', 'PostgreSQL'],
+        caseStudy: {
+            period: 'Bull AI · Sep 2025 to now',
+            role: 'Software Engineer, AI & Data Platforms',
+            problem: 'Segment-level revenue for listed Indian companies sits inside PDFs such as annual reports, results filings and presentations, often as scanned tables and charts. It has to be extracted for about 3,000 companies every quarter, and it has to be right.',
+            built: [
+                'A six-stage pipeline (retrieve, OCR, parse, discover, extract, validate) that works through about 3,000 listed companies across 18 to 19 sectors, one company at a time.',
+                'It maintains roughly 5 to 7 years of quarterly segment-level revenue and related decision metrics for each company, fusing several data sources.',
+                'The OCR backend underneath: self-hosted layout analysis turns each page into a semantic block graph, and only tables and charts go to a lightweight vision model.',
+                'Extraction runs as an HTTP service with an engine pool, an admission queue, deadlines and graceful drain.',
+            ],
+            decisions: [
+                { title: 'Send only what needs vision', body: 'Layout analysis decides which regions are tables or charts. Prose never reaches the vision model, which keeps cost and latency down.' },
+                { title: 'Cache by content', body: 'OCR, vision and extraction results are content-addressed, so a rerun only redoes the steps whose inputs changed, and a run can be replayed from its stored artifacts.' },
+                { title: 'Prompt changes are tested', body: 'Prompt and schema changes are checked by contract tests, and evaluation harnesses with tracing compare every change against a hand-checked sample.' },
+                { title: 'Repair numbers, then validate', body: 'Strict output validation plus repair passes for periods, currency units and table totals. Cost and latency are recorded for every page.' },
+            ],
+            results: [
+                { value: '~3,000', label: 'listed companies covered', note: 'across 18 to 19 sectors' },
+                { value: '95 to 98%', label: 'extraction accuracy', note: 'against a hand-checked sample' },
+                { value: '~30 s', label: 'per page', note: 'end-to-end extraction time' },
+                { value: '~Rs 3,000', label: 'per million pages', note: 'extraction cost' },
+            ],
+        },
     },
     {
         id: 'S-03',
+        slug: 'data-ingestion-services',
         title: 'Data ingestion services',
         summary: 'Scheduled ingestion and transform services that pull external data feeds into a relational store.',
         stages: ['ingest', 'transform', 'checkpoint', 'load'],
@@ -136,9 +191,27 @@ export const SYSTEMS: SystemType[] = [
             'Containerised cloud deployments',
         ],
         stack: ['Python', 'PostgreSQL', 'Docker', 'Cloud'],
+        caseStudy: {
+            period: 'Bull AI · Sep 2025 to now',
+            role: 'Software Engineer, AI & Data Platforms',
+            problem: 'Every downstream system depends on an accurate master list of listed companies and links to their filings. Exchange data changes daily, and some of it is only reachable through slow, paginated web pages.',
+            built: [
+                'A daily sync that downloads the latest company data from both Indian exchanges, shows what changed and then updates the master table in a relational store.',
+                'A headless-browser scraper that walks paginated exchange search results to collect filing links.',
+                'Market-cap rules that decide which companies stay in coverage.',
+                'Scheduled, containerised jobs with checkpoints, so a long run can resume instead of starting over.',
+            ],
+            decisions: [
+                { title: 'Diff before write', body: 'The sync computes and shows what changed before touching the database, so a bad upstream file is caught before it overwrites good data.' },
+                { title: 'Plan for flaky pages', body: 'The scraper restarts its browser after crashes, retries failed pages and saves a screenshot of every error for debugging.' },
+                { title: 'Resume after failure', body: 'Long jobs write checkpoints, so a failure picks up from the last good step.' },
+            ],
+            results: [],
+        },
     },
     {
         id: 'S-04',
+        slug: 'conversational-assistant',
         title: 'Conversational assistant',
         summary: 'A domain-focused assistant that grounds answers in documents and live data and streams responses to the client.',
         stages: ['resolve', 'lookup', 'rag', 'answer', 'stream'],
@@ -148,9 +221,27 @@ export const SYSTEMS: SystemType[] = [
             'Structured, chart-ready responses',
         ],
         stack: ['FastAPI', 'React', 'LangChain', 'Vector DB', 'Gemini'],
+        caseStudy: {
+            period: 'Bull AI · Sep 2025 to now',
+            role: 'Software Engineer, AI & Data Platforms',
+            problem: 'Visitors to the company website wanted quick answers about Indian companies (what a company does, how its numbers look, what its documents say) in a chat, not in a research report.',
+            built: [
+                'The backend of an India-focused financial copilot: company lookup, financial snapshots, document Q&A and chart-ready answers.',
+                'A FastAPI service that streams answers to the client over server-sent events.',
+                'Retrieval over company documents with vector search, with data in MongoDB.',
+                'Integration into the company website chatbot.',
+            ],
+            decisions: [
+                { title: 'Stream everything', body: 'Answers stream over SSE, so a response starts to appear immediately instead of after the whole answer is ready.' },
+                { title: 'Answer in structure', body: 'Responses can carry chart-ready data, so the front end draws a chart instead of describing numbers in prose.' },
+                { title: 'Ground in documents', body: 'Document questions are answered from retrieved passages, not from the model\'s memory.' },
+            ],
+            results: [{ value: '~9,000', label: 'active users', note: 'through the company website chatbot' }],
+        },
     },
     {
         id: 'S-05',
+        slug: 'batch-analysis-jobs',
         title: 'Batch analysis jobs',
         summary: 'Scheduled and webhook-triggered batch jobs for summarisation, comparison and chart generation.',
         stages: ['schedule', 'summarise', 'chart', 'store'],
@@ -160,6 +251,21 @@ export const SYSTEMS: SystemType[] = [
             'Storage-backed chart generation',
         ],
         stack: ['Python', 'Gemini', 'Cloud'],
+        caseStudy: {
+            period: 'Bull AI · Sep 2025 to now',
+            role: 'Software Engineer, AI & Data Platforms',
+            problem: 'Some analysis does not need a chat. Every quarter there are earnings calls to summarise, competitors to compare and revenue charts to refresh, for many companies at once.',
+            built: [
+                'Three batch workflows on Vertex AI and Gemini: earnings-call summaries, competitor analysis and revenue visualisation.',
+                'Runs start on a schedule or from a webhook.',
+                'Generated summaries and charts are written to storage for the product to serve.',
+            ],
+            decisions: [
+                { title: 'Batch, not chat', body: 'Jobs run offline in batches, which suits work with a natural schedule and lets results be checked before they are published.' },
+                { title: 'Two kinds of trigger', body: 'Schedulers cover the regular cadence, and webhooks start a job as soon as new input arrives.' },
+            ],
+            results: [{ value: '3', label: 'batch workflows', note: 'concall summaries, competitor analysis and revenue charts' }],
+        },
     },
 ];
 
@@ -196,17 +302,30 @@ export const RESUME_SKILL_GROUPS = [
 
 export const PROJECTS: ProjectType[] = [
     {
+        title: 'VyaparDrishti',
+        slug: 'vyapardrishti',
+        year: 2026,
+        description: `Photographed and handwritten supplier bills (including Hinglish and Devanagari) and spoken sales become one explainable stock-and-cash ledger, which then recommends what to reorder, where cash is trapped and how much short-term funding is needed.\n\nAI is used only where input is unstructured. Deterministic Python handles everything involving money: models extract structured events, while stock and finance arithmetic, reconciliation and confidence flags (smudged rates, total mismatches) are rule-based.\n\nAn evaluation harness (8 synthetic bills covering smudged, skewed, handwritten and mismatched cases, plus 14 voice clips) compared 7 models on parse rate, item mapping, totals and latency. The best model reached 100% bill-total and mismatch-flag accuracy and 86% correct stock movements on voice, at a median 10 to 15 s per bill.\n\nShipped as a FastAPI service with 22 endpoints, about 5,600 lines of Python and 262 tests across 24 files.`,
+        role: 'Built for the Paytm Build for India AI Hackathon (AI for Small Businesses track).',
+        techStack: ['Python', 'FastAPI', 'Sarvam AI', 'LLM evals'],
+        thumbnail: '',
+        longThumbnail: '',
+        images: [],
+    },
+    {
         title: 'Thumbnail AI',
         slug: 'thumbnail-ai',
         liveUrl: '',
         year: 2024,
-        description: `AI thumbnail generation platform with background removal, reusable templates, and batch workflows. Built with Next.js, TypeScript, AI/ML APIs, and Cloudflare.`,
+        description: `A credit-based SaaS for creating thumbnails. Background removal runs in the browser in a web worker, with an editor for text, effects and filters.\n\nClerk authentication with webhook-synced users, Razorpay checkout for credit packs (10 free credits on signup, Rs 10 per credit) and server-side credit deduction, plus landing, pricing and dashboard pages.`,
         role: `Sole developer: designed and built the full product: generation pipeline, template editor, and batch processing on Cloudflare infrastructure.`,
         techStack: [
             'Next.js',
             'TypeScript',
-            'AI/ML APIs',
-            'Cloudflare',
+            'Prisma',
+            'Clerk',
+            'Razorpay',
+            'AWS',
         ],
         thumbnail: '',
         longThumbnail: '',
@@ -218,7 +337,7 @@ export const PROJECTS: ProjectType[] = [
         slug: 'medium-blog-clone',
         liveUrl: 'https://blog-ten-pi-91.vercel.app/',
         year: 2024,
-        description: `A full-stack blogging platform with auth, comments, dark/light mode, and 95+ PageSpeed. Built on Hono + Cloudflare Workers with React, Prisma, and PostgreSQL.`,
+        description: `A publishing platform with a JWT-authenticated Hono API on Cloudflare Workers: 12 REST endpoints for sign-up and sign-in, post CRUD and author profiles, on Prisma Accelerate and PostgreSQL. The React and Tailwind front end has a rich-text editor and sanitised rendering.\n\nZod validation schemas are shared between the front end and the API as a published npm package. 95+ PageSpeed score.`,
         role: `Full-stack developer: owned the entire lifecycle: Hono API on Cloudflare Workers, Prisma/PostgreSQL data layer, React frontend, and performance work to hit 95+ PageSpeed.`,
         techStack: [
             'Hono',

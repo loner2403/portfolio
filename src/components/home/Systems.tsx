@@ -1,9 +1,15 @@
 import type { CSSProperties } from 'react'
+import { Link } from 'react-router-dom'
 import { SYSTEMS } from '@/lib/data'
+import { cardVar } from '@/lib/cards'
 import Section from '@/components/layout/Section'
 import Principles from '@/components/home/Principles'
 import SystemArchitecture from '@/components/home/SystemArchitecture'
 import { cn } from '@/lib/utils'
+
+const preload = () => {
+  void import('@/pages/SystemPage')
+}
 
 export default function Systems() {
   return (
@@ -37,6 +43,16 @@ export default function Systems() {
               </h3>
               <p className="mt-4 max-w-[52ch] text-muted">{system.summary}</p>
               <p className="mt-6 font-mono text-xs text-faint">{system.stack.join(' · ')}</p>
+              <Link
+                to={`/systems/${system.slug}`}
+                state={{ wipe: cardVar(index) }}
+                data-testid="case-link"
+                onPointerEnter={preload}
+                onFocus={preload}
+                className="mt-6 inline-flex min-h-11 items-center gap-2 font-mono text-sm text-ink underline underline-offset-4 hover:decoration-2"
+              >
+                Read the case study <span aria-hidden="true">→</span>
+              </Link>
             </div>
 
             <div className={cn('stack-inset min-w-0 lg:col-span-8', index % 2 === 1 && 'lg:order-1')}>

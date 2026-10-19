@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 import { AnimatePresence, m, useReducedMotion } from 'motion/react'
 import { Analytics } from '@vercel/analytics/react'
 import SiteHeader from '@/components/layout/SiteHeader'
@@ -7,11 +7,15 @@ import SiteFooter from '@/components/layout/SiteFooter'
 import CommandPalette from '@/components/CommandPalette'
 import MotionLayer from '@/motion/MotionLayer'
 import { refreshScenes, scrollToTop } from '@/motion/bus'
+import { cn } from '@/lib/utils'
 import Home from '@/pages/Home'
 import NotFound from '@/pages/NotFound'
 
 const ProjectPage = lazy(() => import('@/pages/ProjectPage'))
+const SystemPage = lazy(() => import('@/pages/SystemPage'))
 const AskBot = lazy(() => import('@/components/ask/AskBot'))
+
+const SCROLL_KEY = 'scroll:'
 
 function ScrollManager() {
   const { pathname, hash } = useLocation()
@@ -25,19 +29,48 @@ function ScrollManager() {
   return null
 }
 
-function RouteWipe() {
+function ScrollMemory() {
   const { pathname } = useLocation()
+  useEffect(
+    () => () => {
+      try {
+        sessionStorage.setItem(SCROLL_KEY + pathname, String(window.scrollY))
+      } catch {
+        return
+      }
+    },
+    [pathname],
+  )
+  return null
+}
+
+function readScroll(pathname: string): number | null {
+  try {
+    const value = sessionStorage.getItem(SCROLL_KEY + pathname)
+    return value === null ? null : Number(value)
+  } catch {
+    return null
+  }
+}
+
+function RouteWipe() {
+  const location = useLocation()
   const reduced = useReducedMotion()
   const first = useRef(true)
+  const stateRef = useRef(location.state)
+  stateRef.current = location.state
   const [run, setRun] = useState(0)
+  const [colour, setColour] = useState<string | null>(null)
 
   useEffect(() => {
     if (first.current) {
       first.current = false
       return
     }
+    const wipe = (stateRef.current as { wipe?: unknown } | null)?.wipe
+    setColour(typeof wipe === 'string' ? wipe : null)
     setRun((n) => n + 1)
-  }, [pathname])
+  }, [location.pathname])
 
   if (run === 0 || reduced) return null
 
@@ -45,7 +78,8 @@ function RouteWipe() {
     <m.div
       key={run}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-[65] bg-signal"
+      className={cn('pointer-events-none fixed inset-0 z-[65]', !colour && 'bg-signal')}
+      style={colour ? { background: colour } : undefined}
       initial={{ clipPath: 'inset(0 100% 0 0)' }}
       animate={{
         clipPath: [
@@ -70,6 +104,7 @@ function RouteReady() {
 
 function App() {
   const location = useLocation()
+  const navigationType = useNavigationType()
   const desktop =
     typeof window === 'undefined' || window.matchMedia('(min-width: 1024px)').matches
 
@@ -101,6 +136,7 @@ function App() {
     <>
       <a href="#main" className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:left-4 focus-visible:top-4 focus-visible:z-[70] focus-visible:border focus-visible:border-signal focus-visible:bg-bg focus-visible:px-3 focus-visible:py-2 focus-visible:font-mono focus-visible:text-sm focus-visible:text-ink">Skip to content</a>
       <ScrollManager />
+      <ScrollMemory />
       <MotionLayer />
       <SiteHeader />
       <RouteWipe />
@@ -108,7 +144,13 @@ function App() {
         mode="wait"
         initial={false}
         onExitComplete={() => {
-          if (!window.location.hash) scrollToTop()
+          if (window.location.hash) return
+          const saved = navigationType === 'POP' ? readScroll(location.pathname) : null
+          if (saved !== null && Number.isFinite(saved)) {
+            window.scrollTo({ top: saved, left: 0, behavior: 'instant' })
+            return
+          }
+          scrollToTop()
         }}
       >
         <m.main key={location.pathname} id="main" tabIndex={-1} {...transition}>
@@ -127,6 +169,15 @@ function App() {
               element={
                 <Suspense fallback={<div className="min-h-screen bg-bg" />}>
                   <ProjectPage />
+                  <RouteReady />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/systems/:slug"
+              element={
+                <Suspense fallback={<div className="min-h-screen bg-bg" />}>
+                  <SystemPage />
                   <RouteReady />
                 </Suspense>
               }

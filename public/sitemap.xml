@@ -7,6 +7,36 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://harshallade.site/systems/research-agent-workflows</loc>
+    <lastmod>2026-10-19</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://harshallade.site/systems/document-extraction-pipeline</loc>
+    <lastmod>2026-10-19</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://harshallade.site/systems/data-ingestion-services</loc>
+    <lastmod>2026-10-19</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://harshallade.site/systems/conversational-assistant</loc>
+    <lastmod>2026-10-19</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://harshallade.site/systems/batch-analysis-jobs</loc>
+    <lastmod>2026-10-19</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://harshallade.site/projects/vyapardrishti</loc>
+    <lastmod>2026-10-19</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://harshallade.site/projects/thumbnail-ai</loc>
     <lastmod>2026-10-09</lastmod>
     <priority>0.6</priority>
