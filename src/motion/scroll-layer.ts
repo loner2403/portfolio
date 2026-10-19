@@ -249,9 +249,9 @@ function mountScenes(): () => void {
         cards.forEach((card, index) => {
           const next = cards[index + 1]
           if (!next) return
-          gsap.to(card, {
-            scale: 0.9 + index * 0.02,
-            ease: 'none',
+          const dim = card.querySelector<HTMLElement>('[data-stack-dim]')
+          const tl = gsap.timeline({
+            defaults: { ease: 'none' },
             scrollTrigger: {
               trigger: next,
               start: 'top 85%',
@@ -260,6 +260,8 @@ function mountScenes(): () => void {
               invalidateOnRefresh: true,
             },
           })
+          tl.to(card, { scale: 0.9 + index * 0.02 }, 0)
+          if (dim) tl.to(dim, { opacity: 0.35 }, 0)
         })
       },
     )

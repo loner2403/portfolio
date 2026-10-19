@@ -10,18 +10,23 @@ function HeaderLink({
   isHome,
   onNavigate,
   marker,
+  variant = 'bar',
 }: {
   id: string
   label: string
   isHome: boolean
   onNavigate?: () => void
   marker?: boolean
+  variant?: 'bar' | 'sheet'
 }) {
-  const className = cn(
-    'font-mono text-[13px] text-muted transition-colors hover:text-ink',
-    marker &&
-      "data-[active]:text-ink data-[active]:before:mr-2 data-[active]:before:inline-block data-[active]:before:size-1 data-[active]:before:bg-signal data-[active]:before:content-['']",
-  )
+  const className =
+    variant === 'sheet'
+      ? 'flex min-h-14 items-center border-b border-line font-display text-[2.25rem] leading-none text-ink transition-colors hover:text-signal'
+      : cn(
+          'font-mono text-[13px] text-muted transition-colors hover:text-ink',
+          marker &&
+            "data-[active]:text-ink data-[active]:before:mr-2 data-[active]:before:inline-block data-[active]:before:size-1 data-[active]:before:bg-signal data-[active]:before:content-['']",
+        )
   if (isHome) {
     return (
       <a href={`#${id}`} onClick={onNavigate} className={className}>
@@ -54,6 +59,10 @@ export default function SiteHeader() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  useEffect(() => {
+    setMenuOpen(false)
+  }, [pathname])
 
   useEffect(() => {
     if (!menuOpen) return
@@ -111,19 +120,18 @@ export default function SiteHeader() {
               type="button"
               data-testid="cmdk-trigger"
               onClick={openPalette}
-              className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center whitespace-nowrap rounded-sm border border-line px-2.5 py-1 font-mono text-xs text-muted transition-colors hover:border-signal hover:text-ink"
+              className="inline-flex min-h-11 min-w-11 md:min-h-8 md:min-w-0 shrink-0 items-center justify-center whitespace-nowrap rounded-sm border border-line px-2.5 py-1 font-mono text-xs text-muted transition-colors hover:border-signal hover:text-ink"
             >
               {isMac ? '⌘K' : 'Ctrl K'}
             </button>
             <button
               type="button"
-              aria-label="Toggle menu"
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
               onClick={() => setMenuOpen((open) => !open)}
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm border border-line px-2.5 py-1 font-mono text-xs text-muted transition-colors hover:border-signal hover:text-ink md:hidden"
+              className="inline-flex min-h-11 min-w-11 md:min-h-8 md:min-w-0 items-center justify-center rounded-sm border border-line px-2.5 py-1 font-mono text-xs text-muted transition-colors hover:border-signal hover:text-ink md:hidden"
             >
-              Menu
+              {menuOpen ? 'Close' : 'Menu'}
             </button>
           </div>
         </div>
@@ -132,13 +140,14 @@ export default function SiteHeader() {
       {menuOpen && (
         <div id="mobile-menu" className="border-t border-line bg-bg md:hidden">
           <Container>
-            <nav className="flex flex-col py-4">
+            <nav className="flex flex-col py-2">
               {NAV_SECTIONS.map((section) => (
                 <HeaderLink
                   key={section.id}
                   id={section.id}
                   label={section.label}
                   isHome={isHome}
+                  variant="sheet"
                   onNavigate={() => setMenuOpen(false)}
                 />
               ))}

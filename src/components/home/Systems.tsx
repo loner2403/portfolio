@@ -42,6 +42,11 @@ export default function Systems() {
             <div className={cn('stack-inset min-w-0 lg:col-span-8', index % 2 === 1 && 'lg:order-1')}>
               <SystemArchitecture systemId={system.id} />
             </div>
+            <span
+              aria-hidden="true"
+              data-stack-dim
+              className="pointer-events-none absolute -inset-px rounded-sm bg-signal-ink opacity-0"
+            />
           </article>
         ))}
       </div>

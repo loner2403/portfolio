@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
-import { GENERAL_INFO, HERO_STATS, MY_EXPERIENCE, PROJECTS, RESUME_SKILL_GROUPS, SYSTEMS } from '../src/lib/data'
+import { GENERAL_INFO, HERO_STATS, MY_EXPERIENCE, PRINCIPLES, PROJECTS, RESUME_SKILL_GROUPS, SYSTEMS } from '../src/lib/data'
 
 const SECTION_IDS = ['top', 'systems', 'work', 'log', 'stack', 'contact']
 const VIEWPORTS = [
@@ -288,7 +288,7 @@ test.describe('work and project pages', () => {
     await gotoReady(page)
     const targets = [
       page.getByTestId('cmdk-trigger'),
-      page.getByRole('button', { name: 'Toggle menu' }),
+      page.getByRole('button', { name: 'Menu', exact: true }),
       page.getByTestId('copy-email'),
     ]
     for (const target of targets) {
@@ -341,6 +341,62 @@ test.describe('work and project pages', () => {
   test('unknown slug shows the not found view', async ({ page }) => {
     await gotoReady(page, '/projects/does-not-exist')
     await expect(page.getByTestId('not-found')).toBeVisible()
+  })
+})
+
+test.describe('V3.4 sections', () => {
+  test('how I build lists every principle with its explanation', async ({ page }) => {
+    await gotoReady(page)
+    const items = page.getByTestId('principle')
+    await expect(items).toHaveCount(PRINCIPLES.length)
+    for (let i = 0; i < PRINCIPLES.length; i++) {
+      await expect(items.nth(i)).toContainText(PRINCIPLES[i].title)
+      await expect(items.nth(i)).toContainText(PRINCIPLES[i].line)
+    }
+  })
+
+  test('404 is a coral block with a heading and a way back', async ({ page }) => {
+    await gotoReady(page, '/projects/does-not-exist')
+    const block = page.getByTestId('not-found')
+    const colours = await block.evaluate((el) => ({
+      bg: getComputedStyle(el).backgroundColor,
+      ink: getComputedStyle(el.querySelector('h1') as HTMLElement).color,
+    }))
+    expect(colours.bg).toBe('rgb(255, 138, 101)')
+    expect(contrast(colours.bg, colours.ink)).toBeGreaterThanOrEqual(7)
+    await expect(page.locator('main h1')).toHaveCount(1)
+    await expect(block.locator('a[href="/"]')).toHaveCount(1)
+    for (const project of PROJECTS) {
+      await expect(block.locator(`a[href="/projects/${project.slug}"]`)).toHaveCount(1)
+    }
+  })
+
+  test('mobile menu links are large and close the menu', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 })
+    await gotoReady(page)
+    const toggle = page.getByRole('button', { name: 'Menu', exact: true })
+    await toggle.click()
+    await expect(page.getByRole('button', { name: 'Close', exact: true })).toHaveAttribute('aria-expanded', 'true')
+    const links = page.locator('#mobile-menu a')
+    await expect(links).toHaveCount(5)
+    for (let i = 0; i < 5; i++) {
+      const box = await links.nth(i).boundingBox()
+      expect(box!.height).toBeGreaterThanOrEqual(44)
+    }
+    await page.locator('#mobile-menu').getByRole('link', { name: 'work', exact: true }).click()
+    await expect(page.locator('#mobile-menu')).toHaveCount(0)
+  })
+
+  test('a covered system card dims as the next one arrives', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await gotoReady(page)
+    await page.waitForFunction(() => document.documentElement.classList.contains('motion-ready'), null, { timeout: 15_000 })
+    const dimOf = (id: string) =>
+      page.locator(`#system-${id} [data-stack-dim]`).evaluate((el) => Number.parseFloat(getComputedStyle(el).opacity))
+    expect(await dimOf('S-01')).toBe(0)
+    await page.locator('#system-S-03').scrollIntoViewIfNeeded()
+    await expect.poll(() => dimOf('S-01'), { timeout: 5000 }).toBeGreaterThan(0.25)
+    expect(await dimOf(SYSTEMS[SYSTEMS.length - 1].id)).toBe(0)
   })
 })
 
